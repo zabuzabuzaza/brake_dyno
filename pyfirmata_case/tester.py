@@ -10,6 +10,8 @@ import pyfirmata
 import sys
 import time
 
+from frame import Frame
+
 def blinker(): 
     """
     Tests for basic Arduino functionality. 
@@ -38,13 +40,19 @@ def tester_main():
     
     board.exit()
     
+def gui_tester(): 
+    newFrame = Frame()
+    time.sleep(2)
+    newFrame.updateText("test")
     
 
 if __name__ == '__main__': 
     try: 
-        main.main()
+        #main.main()
         
-        tester_main()
+        #tester_main()
+        
+        gui_tester()
         
     except KeyboardInterrupt: 
         sys.exit(0)
