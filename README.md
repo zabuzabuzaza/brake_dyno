@@ -12,7 +12,7 @@ Requires the folliwng packages
 - pyserial 
 - wxPython
 
-The old pyfirmata version executable is in the dist folder, called main.exe. 
+The executable is in the 'dist' folder.
 
 Notes
 =========
