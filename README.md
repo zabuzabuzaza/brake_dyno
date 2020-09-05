@@ -11,6 +11,8 @@ Requires the package:
 - pyfirmata 
 - matplotlib
 
+The executable is in the dist folder, called main.exe. 
+
 To Do
 ======
 - create tk frame for gui (and all the functionality that comes with it)
