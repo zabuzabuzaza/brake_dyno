@@ -30,3 +30,4 @@ To Do
 ======
 - flesh out the GUI 
 - add some test runs for analog/digital output
+- figure out a basic PID implementation 
