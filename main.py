@@ -8,21 +8,22 @@ obtainable from the Arduino IDE with File > Examples > Firmata >
 StandardFirmata. 
 """
 import sys
-#import pyfirmata 
 import time 
+import threading
 
 from arduino import Arduino
+from frame import Frame
 import util
+
 
 def main(): 
     """
     
-
-    Returns
-    -------
-    None.
-
     """
+    #newFrame = Frame()
+    #newFrame.executeLoop()
+
+    
     newArduino = Arduino() 
     
     newBoard = newArduino.board
@@ -35,20 +36,19 @@ def main():
     stopped = False
     dataset = []
     
+    
     while not stopped:
-        # check in stop button is pressed       
         if d_in.read(): 
             led.write(1)
             stopped = True
-        
+    
         # record analog input 
         a_value = a_in.read()
         dataset.append(a_value)
         print(f"{a_value}")
         
         time.sleep(0.1)
-    
-    
+        
     print(dataset)
     util.data2csv(dataset)
         
