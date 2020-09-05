@@ -7,20 +7,26 @@ Usage
 ========
 
 Works with a "COM3" port. 
-Requires the package: 
-- pyfirmata 
-- matplotlib
+Now works with serial, don't need pyfirmata anymore. 
+Requires the folliwng packages 
+- pyserial 
+- wxPython
 
-The executable is in the dist folder, called main.exe. 
+The old pyfirmata version executable is in the dist folder, called main.exe. 
 
 Notes
 =========
-Because i keep forgetting; to compile to exe, run Anaconda prompt and use::
+Because i keep forgetting; to compile to exe, run Anaconda prompt and use
 
     pyinstaller --onefile main.py
     
 in the directory of main.py
 
+Done 
+====================
+- Recording functionality with GUI and a button is done and works alright
+
 To Do
 ======
-- create tk frame for gui (and all the functionality that comes with it)
+- flesh out the GUI 
+- add some test runs for analog/digital output
