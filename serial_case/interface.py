@@ -50,5 +50,8 @@ class Gooey(wx.Frame):
         data = newDataset.dataset    
         
         util.data2csv(data)
+<<<<<<< HEAD
         
         ser.close()
+=======
+>>>>>>> 18f9e3c37e809017f20be9fd5dd79fd71ab51d9e

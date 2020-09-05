@@ -19,6 +19,7 @@ def main():
     Gooey(None, "My Gooey")
     ex.MainLoop()
      
+<<<<<<< HEAD
 
     
     # newArduino = Arduino()
@@ -26,6 +27,8 @@ def main():
     
     
     # newDataset = DataSet() 
+=======
+>>>>>>> 18f9e3c37e809017f20be9fd5dd79fd71ab51d9e
     
 
 if __name__ == '__main__': 
