@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+3000# -*- coding: utf-8 -*-
 """
 Data aquisition software for the 2020 MECH4552 Brake Dyno team.
 """

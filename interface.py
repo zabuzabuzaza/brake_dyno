@@ -11,20 +11,17 @@ import wx.xrc
 
 class Gooey(wx.Frame):
     def __init__(self, parent, title):
-        # """
-        # Initialises the main GUI frame for all user interation and event
-        # handling.
+        """
+        Initialises the main GUI frame for all user interation and event
+        handling.
 
-        # Parameters
-        # ----------
-        # parent : Frame
-        #     a parent frame in which to initialise in. Usually 'None'.
-        # title : string
-        #     a title for the window.
-        # """
-        # super(Gooey, self).__init__(parent, title=title, size=(200,150))
-        # self.SetTitle(title)
-        # self.initUI()
+        Parameters
+        ----------
+        parent : Frame
+            a parent frame in which to initialise in. Usually 'None'.
+        title : string
+            a title for the window.
+        """
         super(Gooey, self).__init__(parent, title = title, size = ( 700,250 ))
 
         panel = wx.Panel(self)
@@ -52,29 +49,12 @@ class Gooey(wx.Frame):
 
         panel.SetSizer(sizer1)
 
-        #self.Layout()
         self.Centre()
         self.Show()
 
         self.but1.Bind(wx.EVT_BUTTON, self.executeAcq)
         self.enterText.Bind(wx.EVT_TEXT_ENTER, self.getTestLength)
 
-
-    # def initUI(self):
-    #     """
-    #     Populates the frame with the required components and functionality.
-
-    #     Returns
-    #     -------
-    #     None.
-    #     """
-    #     panel = wx.Panel(self)
-
-    #     self.but2 = wx.Button(panel, label="Record Data")
-    #     self.but2.Bind(wx.EVT_BUTTON, self.executeAcq)
-
-    #     self.Centre()
-    #     self.Show(True)
 
     def onClicked(self, event):
         """
