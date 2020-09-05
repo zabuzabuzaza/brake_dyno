@@ -4,27 +4,32 @@ Serial version
 """
 import sys
 import serial 
+import wx 
 
 from arduino import Arduino
+from dataset import DataSet
+from interface import Gooey
+import util
+
+
 
 def main(): 
     
+    ex = wx.App()
+    Gooey(None, "My Gooey")
+    ex.MainLoop()
+     
+
+    
     newArduino = Arduino()
-    newArduino.printArduino()
     ser = newArduino.ser
     
-    count = 0
-    while count < 2000: 
-        ser_bytes = ser.readline()
-        data = int.from_bytes(ser_bytes, sys.byteorder)
-        print(data)
-        count += 1
+    
+    newDataset = DataSet() 
+    #newDataset.runDataAcq(ser)
+    #data = newDataset.dataset     
         
-        if data > 175000000: 
-            ser.write(bytes(1))
-        else: 
-            ser.write(bytes(0))
-        
+    #util.data2csv(data)
     
     ser.close()
 
@@ -32,6 +37,7 @@ if __name__ == '__main__':
     try: 
         main()
     except Exception as e:
-        #serial.Serial('COM3').close()
+        #tempArduino = serial.Serial('COM3')
+        #tempArduino.close()
         print(e)
         sys.exit(0)
