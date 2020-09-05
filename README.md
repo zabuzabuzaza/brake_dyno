@@ -7,7 +7,7 @@ Usage
 ========
 
 Works with a "COM3" port. 
-Now works with serial, don't need pyfirmata anymore. 
+Now works with serial, don't need pyfirmata anymore. The pyfirmata_case folder is deprecated now. 
 Requires the folliwng packages 
 - pyserial 
 - wxPython
