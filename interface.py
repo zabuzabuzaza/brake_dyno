@@ -22,7 +22,6 @@ class Gooey(wx.Frame):
             a title for the window. 
         """
         super(Gooey, self).__init__(parent, title=title, size=(200,150))
-        #self.SetSize((250, 180))
         self.SetTitle(title)
         self.initUI()
         
