@@ -19,19 +19,7 @@ def main():
     Gooey(None, "My Gooey")
     ex.MainLoop()
      
-
     
-    newArduino = Arduino()
-    ser = newArduino.ser
-    
-    
-    newDataset = DataSet() 
-    #newDataset.runDataAcq(ser)
-    #data = newDataset.dataset     
-        
-    #util.data2csv(data)
-    
-    ser.close()
 
 if __name__ == '__main__': 
     try: 
