@@ -9,7 +9,7 @@ StandardFirmata.
 """
 import sys
 import time 
-import threading
+import serial
 
 from arduino import Arduino
 from frame import Frame
