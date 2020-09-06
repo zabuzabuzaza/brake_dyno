@@ -33,7 +33,7 @@ class Gooey(wx.Frame):
 
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.staticText2 = wx.StaticText(panel, label="Enter test length (millises)")
+        self.staticText2 = wx.StaticText(panel, label="Enter test length (milliseconds)")
         sizer2.Add(self.staticText2, 0, wx.ALIGN_CENTER, 5)
         self.enterText = wx.TextCtrl(panel, style=wx.TE_PROCESS_ENTER)
         sizer2.Add(self.enterText, 0, wx.ALIGN_CENTER, 5)
