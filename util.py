@@ -30,3 +30,13 @@ def data2csv(data_list, filename='data.csv'):
     # keep this for now for testing and debugging
     print("csv file updated")
 
+def extractValues(data_list):
+    time_values = []
+    x_values = []
+    del data_list[0]
+    for entry in data_list:
+        time_values.append(entry[0])
+        x_values.append(entry[0])
+
+    return time_values, x_values
+

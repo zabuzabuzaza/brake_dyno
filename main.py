@@ -1,11 +1,12 @@
-3000# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Data aquisition software for the 2020 MECH4552 Brake Dyno team.
 """
 import sys
 import wx
 
-from interface import Gooey
+from frame import Gooey
+from controller import Controller
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     """
 
     ex = wx.App()
-    Gooey(None, "My Gooey")
+    con = Controller()
     ex.MainLoop()
 
 
