@@ -102,7 +102,7 @@ class Gooey(wx.Frame):
 
         # creates a Dataset object to retrieve and store the data
         newDataset = DataSet()
-        newDataset.runDataAcq(ser)
+        newDataset.runDataAcq(ser, limit= self.test_length)
         data = newDataset.dataset
 
         # takes the Dataset ojbect and saves its contents to file
