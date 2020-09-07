@@ -16,6 +16,8 @@ class Model():
         For keeping track of all information of the GUI.
         """
         self.DEFAULT_TEST_DURATION = 5
+
+
         self.testDuration = self.DEFAULT_TEST_DURATION
 
         # store settings that will either be applied or cancelled

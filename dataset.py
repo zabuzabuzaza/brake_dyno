@@ -30,6 +30,7 @@ class DataSet():
         """
         start_time = time.time()
         while (time.time() - start_time) < limit:
+
             self.getSerialData(serial, time.time() - start_time)
 
     def getSerialData(self, serial, count):

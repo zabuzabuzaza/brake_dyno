@@ -6,7 +6,6 @@ Class for plotting
 import wx
 import wx.xrc
 
-
 class MainPanel(wx.Panel):
     def __init__(self, parent):
         """
@@ -34,28 +33,26 @@ class MainPanel(wx.Panel):
 
         super().__init__(parent)
 
-
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer7 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer7.AddSpacer(0)
 
-        bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
+        # bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText6 = wx.StaticText( self, ID, u"Test Duration", POSITION, SIZE, STYLE )
-        self.m_staticText6.Wrap( WRAP )
-        bSizer8.Add( self.m_staticText6, PROPORTION0, FLAG, BORDER )
+        # self.m_staticText6 = wx.StaticText( self, ID, u"Test Duration", POSITION, SIZE, STYLE )
+        # self.m_staticText6.Wrap( WRAP )
+        # bSizer8.Add( self.m_staticText6, PROPORTION0, FLAG, BORDER )
 
-        self.m_textCtrl2 = wx.TextCtrl( self, ID, EMPTYNAME, POSITION, SIZE, style=wx.TE_PROCESS_ENTER)
-        bSizer8.Add( self.m_textCtrl2, PROPORTION0, FLAG, BORDER )
+        # self.m_textCtrl2 = wx.TextCtrl( self, ID, EMPTYNAME, POSITION, SIZE, style=wx.TE_PROCESS_ENTER)
+        # bSizer8.Add( self.m_textCtrl2, PROPORTION0, FLAG, BORDER )
 
-        self.m_staticText7 = wx.StaticText( self, ID, u"seconds", POSITION, SIZE, STYLE )
-        self.m_staticText7.Wrap( WRAP )
-        bSizer8.Add( self.m_staticText7, PROPORTION0, FLAG, BORDER )
+        # self.m_staticText7 = wx.StaticText( self, ID, u"seconds", POSITION, SIZE, STYLE )
+        # self.m_staticText7.Wrap( WRAP )
+        # bSizer8.Add( self.m_staticText7, PROPORTION0, FLAG, BORDER )
 
-
-        bSizer7.Add( bSizer8, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        # bSizer7.Add( bSizer8, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.m_staticText5 = wx.StaticText( self, ID, u"Test Progress", POSITION, SIZE, STYLE )
         self.m_staticText5.Wrap( WRAP )

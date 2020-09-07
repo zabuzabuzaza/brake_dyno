@@ -66,7 +66,6 @@ class SettingsFrame( wx.Frame ):
         self.m_staticText4.Wrap( WRAP )
         bSizer3.Add( self.m_staticText4, PROPORTION0, FLAG, BORDER )
 
-
         fgSizer2.Add( bSizer3, PROPORTION1, wx.EXPAND, BORDER )
 
         self.m_staticText5 = wx.StaticText( self, ID, u"Recording\nParameters", POSITION, SIZE, STYLE )

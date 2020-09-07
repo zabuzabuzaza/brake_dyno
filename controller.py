@@ -10,6 +10,8 @@ from mainFrame import MainFrame
 from mainPanel import MainPanel
 from settingsFrame import SettingsFrame
 
+import time
+
 
 class Controller():
     def __init__(self):
@@ -34,7 +36,7 @@ class Controller():
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
-        self.mainFrame.addStartTestHandler(self.model.executeAcq)
+        self.mainFrame.addStartTestHandler(self.executeAcq)
 
         # disable main frame duration setting
         # self.mainPanel.addTextCtrlHandler(self.model.getTestDuration)
@@ -62,8 +64,13 @@ class Controller():
     def setRecords( self, event ):
         event.Skip()
 
+    def executeAcq(self, event):
+        self.model.executeAcq(event)
+        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
+
     def applyTestSettings(self, event, frame):
         self.model.applyTestSettings(event)
+        self.mainPanel.m_gauge2.SetRange(self.model.testDuration)
         frame.Close()
 
     def cancelTestSettings(self, event, frame):
