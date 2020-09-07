@@ -16,7 +16,7 @@ class Controller():
         For event handling for all frames and panels.
         """
         self.model = Model()
-        self.frame = Gooey(None, title="My Gooey", winSize=( 800, 500 ))
+        self.frame = Gooey(None, title="braaaaakkkkkee ddyyynnnnnooo", winSize=( 800, 500 ))
 
         self.panel1 = InitialPanel(self.frame)
         self.frame2 = SettingsPanel(None)

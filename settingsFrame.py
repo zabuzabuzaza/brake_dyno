@@ -6,7 +6,7 @@ Created on Mon Sep  7 01:01:03 2020
 """
 import wx
 
-class SettingsPanel( wx.Frame ):
+class SettingsFrame( wx.Frame ):
 
     def __init__( self, parent ):
         wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 674,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
