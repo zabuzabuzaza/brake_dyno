@@ -30,6 +30,8 @@ class SettingsFrame( wx.Frame ):
         # Component Names
 
 
+
+
         # Begin Initialisation
         wx.Frame.__init__ ( self, parent, ID, EMPTYNAME, POSITION, FRAMESIZE,
                            style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
@@ -120,9 +122,6 @@ class SettingsFrame( wx.Frame ):
         bSizer2.Add( bSizer5, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.SetSizer(bSizer2)
-
-        # Connect Events
-
 
 
 

@@ -16,8 +16,11 @@ class Controller():
         """
         For event handling for all frames and panels.
         """
+        WINDOW_SIZE = (800, 500)
+        WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
+
         self.model = Model()
-        self.mainFrame = MainFrame(None, title="braaaaakkkkkee ddyyynnnnnooo", winSize=( 800, 500 ))
+        self.mainFrame = MainFrame(None, WINDOW_TITLE, WINDOW_SIZE)
 
         self.mainPanel = MainPanel(self.mainFrame)
 

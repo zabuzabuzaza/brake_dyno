@@ -3,9 +3,6 @@
 GUI class to handle interations and whatnot.
 """
 
-from arduino import Arduino
-from dataset import DataSet
-import util
 
 import wx
 import wx.xrc
@@ -25,18 +22,9 @@ class MainFrame(wx.Frame):
             a title for the window.
         """
         # Formatting constants
-        POSITION = wx.DefaultPosition
         EMPTYNAME = wx.EmptyString
         ITEMTYPE = wx.ITEM_NORMAL
-        SIZE = wx.DefaultSize
         ID = wx.ID_ANY
-        FLAG = wx.ALL
-        STYLE = 0
-        BORDER = 5
-        PROPORTION0 = 0
-        PROPORTION1 = 1
-        WRAP = -1
-
 
         super(MainFrame, self).__init__(parent, title = title, size = winSize)
 

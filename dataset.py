@@ -12,7 +12,7 @@ class DataSet():
         Initialises a Dataset object for the collection and retrieval of
         serial data coming in.
         """
-        self.dataset = [["Data Point", "X_Data", "Y Data"]]
+        self.dataset = [["Seconds", "X_Data", "Y Data"]]
 
     def runDataAcq(self, serial, limit=10):
         """
@@ -27,11 +27,6 @@ class DataSet():
             A set time limit (in seconds) to record analog data in. This
             will change as various test runs are implemented.
             The default is 10 (s).
-
-        Returns
-        -------
-        None.
-
         """
         start_time = time.time()
         while (time.time() - start_time) < limit:
@@ -46,11 +41,6 @@ class DataSet():
         ----------
         serial : (py)serial obj
             The serial from which to read / write from.
-
-        Returns
-        -------
-        None.
-
         """
 
         ser_bytes = serial.readline()
@@ -89,11 +79,6 @@ class DataSet():
             The serial from which to read / write from.
         checkPoint : int, optional
             Value from which to compare analog range to. The default is 514.
-
-        Returns
-        -------
-        None.
-
         """
         if data_x > checkPoint:
             serial.write(bytes(1))

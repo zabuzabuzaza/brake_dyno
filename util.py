@@ -17,11 +17,6 @@ def data2csv(data_list, filename='data.csv'):
         Optional name for the output csv file. The default is 'data.csv'.
         Will want to implement the current date into the default filename to
         avoid unwanted file overrides.
-
-    Returns
-    -------
-    None.
-
     """
     with open(filename, 'w', newline='') as csv_file:
             wr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)

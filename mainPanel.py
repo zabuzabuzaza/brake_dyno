@@ -70,6 +70,7 @@ class MainPanel(wx.Panel):
         bSizer1.Add( bSizer7, PROPORTION1, wx.EXPAND, BORDER )
         self.SetSizer(bSizer1)
 
+
     def addTextCtrlHandler(self, handler):
         self.m_textCtrl2.Bind( wx.EVT_TEXT, handler )
         self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, handler )
