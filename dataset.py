@@ -3,16 +3,16 @@
 Class for handling data storage and retrieval.
 """
 
-from model import Model
+
 import time
 
-class DataSet(Model):
+class DataSet():
     def __init__(self):
         """
         Initialises a Dataset object for the collection and retrieval of
         serial data coming in.
         """
-        self.dataset = [["Data Point", "X_Data", "Y Data"]]
+        self.dataset = [["Seconds", "X_Data", "Y Data"]]
 
     def runDataAcq(self, serial, limit=10):
         """
@@ -27,17 +27,11 @@ class DataSet(Model):
             A set time limit (in seconds) to record analog data in. This
             will change as various test runs are implemented.
             The default is 10 (s).
-
-        Returns
-        -------
-        None.
-
         """
-        count = 0
         start_time = time.time()
         while (time.time() - start_time) < limit:
+
             self.getSerialData(serial, time.time() - start_time)
-            count += 1
 
     def getSerialData(self, serial, count):
         """
@@ -48,17 +42,12 @@ class DataSet(Model):
         ----------
         serial : (py)serial obj
             The serial from which to read / write from.
-
-        Returns
-        -------
-        None.
-
         """
 
         ser_bytes = serial.readline()
         # will need to explore int to byte conversion that doesn't scale the
         # input weirdly. For now, takes the incoming bytes (b'000/n') and takes
-        # what we need
+        # what we need, so it's slower than converting straight to bytes
         try:
             data_tuple = str(ser_bytes[:-1])[2:-1]
             string_tuple = data_tuple.split(',')
@@ -75,7 +64,7 @@ class DataSet(Model):
         self.dataset.append(data)
 
         # keep for now for testing / debugging
-        self.ledCheck(data_x, serial)
+        # self.ledCheck(data_x, serial)
 
 
     def ledCheck(self, data_x, serial, checkPoint = 514):
@@ -91,11 +80,6 @@ class DataSet(Model):
             The serial from which to read / write from.
         checkPoint : int, optional
             Value from which to compare analog range to. The default is 514.
-
-        Returns
-        -------
-        None.
-
         """
         if data_x > checkPoint:
             serial.write(bytes(1))

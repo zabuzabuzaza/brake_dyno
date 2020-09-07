@@ -5,7 +5,7 @@ Data aquisition software for the 2020 MECH4552 Brake Dyno team.
 import sys
 import wx
 
-from frame import Gooey
+
 from controller import Controller
 
 
@@ -15,9 +15,9 @@ def main():
     and runs the event handling loop.
     """
 
-    ex = wx.App()
-    con = Controller()
-    ex.MainLoop()
+    gooey = wx.App()
+    Controller()
+    gooey.MainLoop()
 
 
 
