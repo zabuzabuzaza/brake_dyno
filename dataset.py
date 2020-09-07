@@ -33,11 +33,9 @@ class DataSet():
         None.
 
         """
-        count = 0
         start_time = time.time()
         while (time.time() - start_time) < limit:
             self.getSerialData(serial, time.time() - start_time)
-            count += 1
 
     def getSerialData(self, serial, count):
         """
@@ -58,7 +56,7 @@ class DataSet():
         ser_bytes = serial.readline()
         # will need to explore int to byte conversion that doesn't scale the
         # input weirdly. For now, takes the incoming bytes (b'000/n') and takes
-        # what we need
+        # what we need, so it's slower than converting straight to bytes
         try:
             data_tuple = str(ser_bytes[:-1])[2:-1]
             string_tuple = data_tuple.split(',')

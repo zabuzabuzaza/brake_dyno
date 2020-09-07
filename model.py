@@ -15,8 +15,8 @@ class Model():
         """
         For keeping track of all information of the GUI.
         """
-
-        self.testDuration = 3
+        self.DEFAULT_TEST_DURATION = 5
+        self.testDuration = self.DEFAULT_TEST_DURATION
 
         # store settings that will either be applied or cancelled
         self.testParameters = {}
@@ -47,7 +47,7 @@ class Model():
         print(f"Actual Duration: {self.testDuration}")
 
     def cancelTestSettings(self, event):
-        self.testParameters['testDuration'] = 3
+        self.testParameters['testDuration'] = self.DEFAULT_TEST_DURATION
         print(f"Temporary Duration: {self.testParameters['testDuration']}")
         print(f"Actual Duration: {self.testDuration}")
 

@@ -20,6 +20,18 @@ class MainPanel(wx.Panel):
         title : string
             a title for the window.
         """
+        # Formatting constants
+        POSITION = wx.DefaultPosition
+        EMPTYNAME = wx.EmptyString
+        SIZE = wx.DefaultSize
+        ID = wx.ID_ANY
+        FLAG = wx.ALL
+        STYLE = 0
+        BORDER = 5
+        PROPORTION0 = 0
+        PROPORTION1 = 1
+        WRAP = -1
+
         super().__init__(parent)
 
 
@@ -31,32 +43,31 @@ class MainPanel(wx.Panel):
 
         bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Test Duration", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText6.Wrap( -1 )
-        bSizer8.Add( self.m_staticText6, 0, wx.ALL, 5 )
+        self.m_staticText6 = wx.StaticText( self, ID, u"Test Duration", POSITION, SIZE, STYLE )
+        self.m_staticText6.Wrap( WRAP )
+        bSizer8.Add( self.m_staticText6, PROPORTION0, FLAG, BORDER )
 
-        self.m_textCtrl2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, style=wx.TE_PROCESS_ENTER)
-        bSizer8.Add( self.m_textCtrl2, 0, wx.ALL, 5 )
+        self.m_textCtrl2 = wx.TextCtrl( self, ID, EMPTYNAME, POSITION, SIZE, style=wx.TE_PROCESS_ENTER)
+        bSizer8.Add( self.m_textCtrl2, PROPORTION0, FLAG, BORDER )
 
-        self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"seconds", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText7.Wrap( -1 )
-        bSizer8.Add( self.m_staticText7, 0, wx.ALL, 5 )
+        self.m_staticText7 = wx.StaticText( self, ID, u"seconds", POSITION, SIZE, STYLE )
+        self.m_staticText7.Wrap( WRAP )
+        bSizer8.Add( self.m_staticText7, PROPORTION0, FLAG, BORDER )
 
 
-        bSizer7.Add( bSizer8, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        bSizer7.Add( bSizer8, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"Test Progress", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText5.Wrap( -1 )
-        bSizer7.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        self.m_staticText5 = wx.StaticText( self, ID, u"Test Progress", POSITION, SIZE, STYLE )
+        self.m_staticText5.Wrap( WRAP )
+        bSizer7.Add( self.m_staticText5, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.m_gauge2 = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+        self.m_gauge2 = wx.Gauge( self, ID, 100, POSITION, SIZE, wx.GA_HORIZONTAL )
         self.m_gauge2.SetValue( 0 )
-        bSizer7.Add( self.m_gauge2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
+        bSizer7.Add( self.m_gauge2, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         bSizer7.AddSpacer(0)
 
-        bSizer1.Add( bSizer7, 1, wx.EXPAND, 5 )
+        bSizer1.Add( bSizer7, PROPORTION1, wx.EXPAND, BORDER )
         self.SetSizer(bSizer1)
 
     def addTextCtrlHandler(self, handler):

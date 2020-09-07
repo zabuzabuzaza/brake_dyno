@@ -24,23 +24,34 @@ class MainFrame(wx.Frame):
         title : string
             a title for the window.
         """
-        super(MainFrame, self).__init__(parent, title = title, size = winSize)
+        # Formatting constants
+        POSITION = wx.DefaultPosition
+        EMPTYNAME = wx.EmptyString
+        ITEMTYPE = wx.ITEM_NORMAL
+        SIZE = wx.DefaultSize
+        ID = wx.ID_ANY
+        FLAG = wx.ALL
+        STYLE = 0
+        BORDER = 5
+        PROPORTION0 = 0
+        PROPORTION1 = 1
+        WRAP = -1
 
-        self.testDuration = 10
-        self.dataset = []
+
+        super(MainFrame, self).__init__(parent, title = title, size = winSize)
 
         self.m_menubar1 = wx.MenuBar( 0 )
         self.m_menu1 = wx.Menu()
-        self.m_menuItem1 = wx.MenuItem( self.m_menu1, wx.ID_ANY, u"Exit", wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_menuItem1 = wx.MenuItem( self.m_menu1, ID, u"Exit", EMPTYNAME, ITEMTYPE )
         self.m_menu1.Append( self.m_menuItem1 )
 
         self.m_menubar1.Append( self.m_menu1, u"File" )
 
         self.m_menu2 = wx.Menu()
-        self.m_menuItem3 = wx.MenuItem( self.m_menu2, wx.ID_ANY, u"Recording Settings", wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_menuItem3 = wx.MenuItem( self.m_menu2, ID, u"Recording Settings", EMPTYNAME, ITEMTYPE )
         self.m_menu2.Append( self.m_menuItem3 )
 
-        self.m_menuItem4 = wx.MenuItem( self.m_menu2, wx.ID_ANY, u"Start Recording", wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_menuItem4 = wx.MenuItem( self.m_menu2, ID, u"Start Recording", EMPTYNAME, ITEMTYPE )
         self.m_menu2.Append( self.m_menuItem4 )
 
         self.m_menubar1.Append( self.m_menu2, u"Test" )
