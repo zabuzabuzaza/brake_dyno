@@ -703,15 +703,38 @@
    'c:\\programdata\\anaconda3\\lib\\multiprocessing\\__init__.py',
    'PYMODULE'),
   ('os', 'c:\\programdata\\anaconda3\\lib\\os.py', 'PYMODULE'),
-  ('_py_abc', 'c:\\programdata\\anaconda3\\lib\\_py_abc.py', 'PYMODULE'),
   ('stringprep', 'c:\\programdata\\anaconda3\\lib\\stringprep.py', 'PYMODULE'),
-  ('interface',
+  ('_py_abc', 'c:\\programdata\\anaconda3\\lib\\_py_abc.py', 'PYMODULE'),
+  ('controller',
    'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
-   'Data Acq\\brake_dyno\\interface.py',
+   'Data Acq\\brake_dyno\\controller.py',
+   'PYMODULE'),
+  ('settingsFrame',
+   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
+   'Data Acq\\brake_dyno\\settingsFrame.py',
+   'PYMODULE'),
+  ('mainPanel',
+   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
+   'Data Acq\\brake_dyno\\mainPanel.py',
+   'PYMODULE'),
+  ('wx.xrc',
+   'c:\\programdata\\anaconda3\\lib\\site-packages\\wx\\xrc.py',
+   'PYMODULE'),
+  ('mainFrame',
+   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
+   'Data Acq\\brake_dyno\\mainFrame.py',
+   'PYMODULE'),
+  ('model',
+   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
+   'Data Acq\\brake_dyno\\model.py',
    'PYMODULE'),
   ('util',
    'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
    'Data Acq\\brake_dyno\\util.py',
+   'PYMODULE'),
+  ('dataset',
+   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
+   'Data Acq\\brake_dyno\\dataset.py',
    'PYMODULE'),
   ('arduino',
    'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
@@ -737,10 +760,6 @@
    'PYMODULE'),
   ('serial.serialutil',
    'c:\\programdata\\anaconda3\\lib\\site-packages\\serial\\serialutil.py',
-   'PYMODULE'),
-  ('dataset',
-   'C:\\Users\\iamde\\OneDrive\\MECH4552\\Documents\\7. Project sections\\3. '
-   'Data Acq\\brake_dyno\\dataset.py',
    'PYMODULE'),
   ('wx',
    'c:\\programdata\\anaconda3\\lib\\site-packages\\wx\\__init__.py',
