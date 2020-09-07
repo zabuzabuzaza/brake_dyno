@@ -6,9 +6,10 @@ Created on Sun Sep  6 17:47:15 2020
 """
 import wx
 from model import Model
-from frame import Gooey
-from panel1 import InitialPanel
-from panel2 import SettingsPanel
+from mainFrame import MainFrame
+from mainPanel import MainPanel
+from settingsFrame import SettingsFrame
+
 
 class Controller():
     def __init__(self):
@@ -16,19 +17,64 @@ class Controller():
         For event handling for all frames and panels.
         """
         self.model = Model()
-        self.frame = Gooey(None, title="braaaaakkkkkee ddyyynnnnnooo", winSize=( 800, 500 ))
+        self.mainFrame = MainFrame(None, title="braaaaakkkkkee ddyyynnnnnooo", winSize=( 800, 500 ))
 
-        self.panel1 = InitialPanel(self.frame)
-        self.frame2 = SettingsPanel(None)
+        self.mainPanel = MainPanel(self.mainFrame)
 
-        self.frame.Centre()
-        self.frame.Show()
+        self.mainFrame.Centre()
+        self.mainFrame.Show()
 
-        self.frame.Layout()
-        self.frame.m_statusBar1 = self.frame.CreateStatusBar( 3 )
+        self.mainFrame.Layout()
+        self.mainFrame.m_statusBar1 = self.mainFrame.CreateStatusBar( 3 )
 
-        self.frame2.Centre()
-        self.frame2.Show()
+        self.addMainFrameEventHandlers()
+
+    def addMainFrameEventHandlers(self):
+        self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
+        self.mainFrame.addStartTestHandler(self.model.executeAcq)
+
+        # disable main frame duration setting
+        # self.mainPanel.addTextCtrlHandler(self.model.getTestDuration)
+
+    def addSettingsFrameEventHandlers(self, settingsFrame):
+        settingsFrame.addTestRunChoiceHandler(self.setTestRun)
+        settingsFrame.addTextCtrlHandler(self.model.getTestDuration)
+        settingsFrame.addCheckBoxHandler(self.setRecords)
+
+        settingsFrame.addApplySettingsHandler(self.applyTestSettings, settingsFrame)
+        settingsFrame.addCancelSettingsHandler(self.cancelTestSettings, settingsFrame)
+
+    def openRecordingSettings(self, event):
+        try:
+            settingsFrame = SettingsFrame(None)
+        except wx.PyNoAppError:
+            print("Try running it again. ")
+        settingsFrame.Centre()
+        settingsFrame.Show()
+        self.addSettingsFrameEventHandlers(settingsFrame)
+
+    def setTestRun( self, event ):
+        event.Skip()
+
+    def setRecords( self, event ):
+        event.Skip()
+
+    def applyTestSettings(self, event, frame):
+        self.model.applyTestSettings(event)
+        frame.Close()
+
+    def cancelTestSettings(self, event, frame):
+        self.model.cancelTestSettings(event)
+        frame.Close()
+
+
+
+
+
+
+
+
+
 
 
 

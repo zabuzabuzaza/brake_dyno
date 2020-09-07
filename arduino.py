@@ -2,12 +2,9 @@
 """
 Arduino class for Arduino handling
 """
-from model import Model
-
 import serial
 
-
-class Arduino(Model):
+class Arduino():
     def __init__(self, port='COM3'):
         """
         Initialises the serial connection for communication between Arduino
@@ -25,6 +22,10 @@ class Arduino(Model):
         None.
 
         """
-        self.ser = serial.Serial(port)
+        try:
+            self.ser = serial.Serial(port)
+        except serial.SerialException:
+            print("Trying to open serial port again")
+            self.ser = serial.Serial(port)
 
 

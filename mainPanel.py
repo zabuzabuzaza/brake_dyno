@@ -3,15 +3,11 @@
 Class for plotting
 """
 
-from dataset import DataSet
-from arduino import Arduino
-#from controller import Controller
-import util
 import wx
 import wx.xrc
 
 
-class InitialPanel(wx.Panel):
+class MainPanel(wx.Panel):
     def __init__(self, parent):
         """
         Initialises the main GUI frame for all user interation and event
@@ -30,7 +26,6 @@ class InitialPanel(wx.Panel):
         bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer7 = wx.BoxSizer( wx.VERTICAL )
-
 
         bSizer7.AddSpacer(0)
 
@@ -61,70 +56,17 @@ class InitialPanel(wx.Panel):
 
         bSizer7.AddSpacer(0)
 
-
         bSizer1.Add( bSizer7, 1, wx.EXPAND, 5 )
         self.SetSizer(bSizer1)
 
-
-        self.m_textCtrl2.Bind( wx.EVT_TEXT, self.setTestDuration )
-        self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, self.setTestDuration )
-
-    def setTestDuration(self, event):
-        """
-        Event handler for Text Entry to Test Length.
-
-        Parameters
-        ----------
-        event : event obj
-            The textEntry object from which to get the entered text.
-
-        Returns
-        -------
-        None.
-
-        """
-        #test_time = int(event.GetEventObject().GetLineText(0))
-        self.testDuration = int(event.GetEventObject().GetLineText(0))
-        #self.variables['testLength'] = test_time
-        #self.interactables['button1'].SetLabel(f"Start Recording {test_time}")
-        #print(self.variables['testLength'])
-        print(self.testDuration)
+    def addTextCtrlHandler(self, handler):
+        self.m_textCtrl2.Bind( wx.EVT_TEXT, handler )
+        self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, handler )
 
 
-    def executeAcq(self, event):
-        """
-        Opens the serial port and starts the process of:
-            - reading the serial port
-            - data recording
-            - saving data to a csv file
-        Closes the serial when done.
 
-        Parameters
-        ----------
-        event : event handler
-            A reference to the action that triggered this function.
 
-        Returns
-        -------
-        None.
 
-        """
-        # opens serial connection
-        newArduino = Arduino()
-        ser = newArduino.ser
-
-        # creates a Dataset object to retrieve and store the data
-        newDataset = DataSet()
-        newDataset.runDataAcq(ser, limit= self.testDuration)
-        data = newDataset.dataset
-
-        # takes the Dataset ojbect and saves its contents to file
-        util.data2csv(data)
-        #self.variables['dataset'] = data
-        time, x_values = util.extractValues(data)
-        self.variables['dataset'] = [time, x_values]
-
-        ser.close()
 
 
 

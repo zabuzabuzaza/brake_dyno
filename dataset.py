@@ -3,10 +3,10 @@
 Class for handling data storage and retrieval.
 """
 
-from model import Model
+
 import time
 
-class DataSet(Model):
+class DataSet():
     def __init__(self):
         """
         Initialises a Dataset object for the collection and retrieval of
@@ -75,7 +75,7 @@ class DataSet(Model):
         self.dataset.append(data)
 
         # keep for now for testing / debugging
-        self.ledCheck(data_x, serial)
+        # self.ledCheck(data_x, serial)
 
 
     def ledCheck(self, data_x, serial, checkPoint = 514):

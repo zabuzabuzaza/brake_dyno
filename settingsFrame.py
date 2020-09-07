@@ -99,21 +99,32 @@ class SettingsFrame( wx.Frame ):
         self.SetSizer(bSizer2)
 
         # Connect Events
+
+
+
+
+
+
+    def addTestRunChoiceHandler(self, handler):
         self.m_choice1.Bind( wx.EVT_CHOICE, self.setTestRun )
-        self.m_textCtrl2.Bind( wx.EVT_TEXT, self.setTestDuration )
-        self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, self.setTestDuration )
+
+    def addTextCtrlHandler(self, handler):
+        self.m_textCtrl2.Bind( wx.EVT_TEXT, handler )
+        self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, handler )
+
+    def addCheckBoxHandler(self, handler):
         self.m_checkBox1.Bind( wx.EVT_CHECKBOX, self.setXRecord )
         self.m_checkBox2.Bind( wx.EVT_CHECKBOX, self.setYRecord )
-        self.m_button1.Bind( wx.EVT_BUTTON, self.resetTestSettings )
-        self.m_button2.Bind( wx.EVT_BUTTON, self.applyTestSettings )
 
-        # Virtual event handlers, overide them in your derived class
+    def addApplySettingsHandler(self, handler, frame):
+        self.m_button1.Bind( wx.EVT_BUTTON, lambda event: handler(event, frame) )
+
+    def addCancelSettingsHandler(self, handler, frame):
+        self.m_button2.Bind( wx.EVT_BUTTON, lambda event: handler(event, frame) )
+
 
 
     def setTestRun( self, event ):
-        event.Skip()
-
-    def setTestDuration( self, event ):
         event.Skip()
 
     def setXRecord( self, event ):
@@ -122,9 +133,6 @@ class SettingsFrame( wx.Frame ):
     def setYRecord( self, event ):
         event.Skip()
 
-    def resetTestSettings( self, event ):
-        event.Skip()
 
-    def applyTestSettings( self, event ):
-        event.Skip()
+
 
