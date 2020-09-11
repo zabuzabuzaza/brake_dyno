@@ -44,10 +44,10 @@ void loop() {
   }
   //Mapping the Values between 0 to 255 because we can give output
   //from 0 -255 using the analogwrite funtion
-  led_value1 = map(inputX, 0, 1023, 0, 200);
-  led_value2 = map(inputX, 0, 1023, 200, 0);
-  led_value3 = map(inputY, 0, 1023, 0, 200);
-  led_value4 = map(inputY, 0, 1023, 200, 0);
+  led_value1 = map(inputX, 0, 1023, 0, 150);
+  led_value2 = map(inputX, 0, 1023, 150, 0);
+  led_value3 = map(inputY, 0, 1023, 0, 150);
+  led_value4 = map(inputY, 0, 1023, 150, 0);
   analogWrite(led_pin1, led_value1);
   analogWrite(led_pin2, led_value2);
   analogWrite(led_pin3, led_value3);
