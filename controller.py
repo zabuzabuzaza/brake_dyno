@@ -5,11 +5,12 @@ Created on Sun Sep  6 17:47:15 2020
 @author: iamde
 """
 import wx
-from model import Model
+
 from mainFrame import MainFrame
 from mainPanel import MainPanel
 from settingsFrame import SettingsFrame
 
+from model import Model
 from arduino import Arduino
 from dataset import DataSet
 import util
@@ -40,7 +41,6 @@ class Controller():
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
-        #self.mainFrame.addStartTestHandler(self.executeAcq)
         self.mainFrame.addStartTestHandler(self.runTest)
 
         # disable main frame duration setting
@@ -86,23 +86,21 @@ class Controller():
         newArduino = Arduino()
         ser = newArduino.ser
 
-        newDataSet = DataSet()
+        #newDataSet = DataSet()
 
         start_time = time.time()
         while (time.time() - start_time) < self.model.testDuration:
-            newDataSet.getSerialData(ser, (time.time() - start_time))
+            #newDataSet.getSerialData(ser, (time.time() - start_time))
+            self.model.getSerialData(ser, (time.time() - start_time))
             self.mainPanel.m_gauge2.SetValue(time.time() - start_time)
 
-        self.model.dataSet = newDataSet.dataset
+            # create plot from Model
+
+        #self.model.dataSet = newDataSet.dataset
         util.data2csv(self.model.dataSet)
 
         ser.close()
 
-        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
-
-
-    def executeAcq(self, event):
-        self.model.executeAcq(event)
         self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
 
     def applyTestSettings(self, event, frame):

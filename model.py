@@ -18,9 +18,9 @@ class Model():
         self.DEFAULT_TEST_DURATION = 5
 
         self.testDuration = self.DEFAULT_TEST_DURATION
-        self.dataSet = [["Time", "X_Data", "Y Data"]]
+        self.dataSet = [["Seconds", "X_Data", "Y Data"]]
 
-        # store settings that will either be applied or cancelled
+        # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
 
 
@@ -40,46 +40,43 @@ class Model():
             self.testParameters['testDuration'] = int(event.GetEventObject().GetLineText(0))
         except ValueError:
             self.testParameters['testDuration'] = 0
-        print(f"Temporary Duration: {self.testParameters['testDuration']}")
-        print(f"Actual Duration: {self.testDuration}")
 
     def applyTestSettings(self, event):
         self.testDuration = self.testParameters['testDuration']
-        print(f"Temporary Duration: {self.testParameters['testDuration']}")
-        print(f"Actual Duration: {self.testDuration}")
 
     def cancelTestSettings(self, event):
         self.testParameters['testDuration'] = self.DEFAULT_TEST_DURATION
+
+    def getSerialData(self, serial, count):
+        """
+        Reads the incoming data from the serial port and adds it to this
+        object's data structure.
+
+        Parameters
+        ----------
+        serial : (py)serial obj
+            The serial from which to read / write from.
+        """
+
+        ser_bytes = serial.readline()[:-1].decode("utf-8")
+        # need to implement multiple data recordings
+        try:
+
+
+            data_x, data_y = ser_bytes.split(',')
+        except (IndexError, ValueError):
+            data_x = -1
+            data_y = -1
+        data = [count, data_x, data_y]
+
+        # keep for now until a live plot is implemented
+        print(data)
+
+        self.dataSet.append(data)
+
+    def debugTestSettings(self):
         print(f"Temporary Duration: {self.testParameters['testDuration']}")
         print(f"Actual Duration: {self.testDuration}")
-
-
-    # def executeAcq(self, event):
-    #     """
-    #     Opens the serial port and starts the process of:
-    #         - reading the serial port
-    #         - data recording
-    #         - saving data to a csv file
-    #     Closes the serial when done.
-
-    #     Parameters
-    #     ----------
-    #     event : event handler
-    #         A reference to the action that triggered this function.
-    #     """
-    #     # opens serial connection
-    #     newArduino = Arduino()
-    #     ser = newArduino.ser
-
-    #     # creates a Dataset object to retrieve and store the data
-    #     newDataset = DataSet()
-    #     newDataset.runDataAcq(ser, limit= self.testDuration)
-    #     data = newDataset.dataset
-
-    #     # takes the Dataset ojbect and saves its contents to file
-    #     util.data2csv(data)
-
-    #     ser.close()
 
 
 
