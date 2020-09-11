@@ -1,7 +1,7 @@
 Drake Dyno Software for Data Acquisition
 =========================
 
-A python program <del>that's compiled into an .exe (with pyinstaller)</del> to run with a Arduino Uno. Used to be compilable to an .exe but it doesn't work with matplotlib. 
+A python program <del>that's compiled into an .exe (with pyinstaller)</del> to run with a Arduino Uno. Used to be compilable to an .exe but pyinstaller doesn't work with matplotlib. For now, you'll need to run the .py file. 
 
 ![Example](images/example.gif)
 
