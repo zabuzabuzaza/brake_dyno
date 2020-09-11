@@ -13,9 +13,6 @@ int led_value1;
 int led_value2; 
 int led_value3; 
 int led_value4; 
-
-long start_time; 
-
 void setup() {
   Serial.begin(9600); 
   digitalWrite(LED_BUILTIN, LOW); 
@@ -32,8 +29,6 @@ void loop() {
   inputX = analogRead(analogX);
   inputY = analogRead(analogY);
   
-  Serial.print(millis() - start_time);
-  Serial.print(','); 
   Serial.print(inputX); 
   Serial.print(','); 
   Serial.print(inputY); 

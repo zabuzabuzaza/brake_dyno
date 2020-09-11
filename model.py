@@ -5,9 +5,9 @@ Created on Sun Sep  6 18:10:48 2020
 @author: iamde
 """
 
-from arduino import Arduino
-from dataset import DataSet
-import util
+# from arduino import Arduino
+# from dataset import DataSet
+# import util
 
 
 class Model():
@@ -17,8 +17,8 @@ class Model():
         """
         self.DEFAULT_TEST_DURATION = 5
 
-
         self.testDuration = self.DEFAULT_TEST_DURATION
+        self.dataSet = [["Time", "X_Data", "Y Data"]]
 
         # store settings that will either be applied or cancelled
         self.testParameters = {}
@@ -54,32 +54,32 @@ class Model():
         print(f"Actual Duration: {self.testDuration}")
 
 
-    def executeAcq(self, event):
-        """
-        Opens the serial port and starts the process of:
-            - reading the serial port
-            - data recording
-            - saving data to a csv file
-        Closes the serial when done.
+    # def executeAcq(self, event):
+    #     """
+    #     Opens the serial port and starts the process of:
+    #         - reading the serial port
+    #         - data recording
+    #         - saving data to a csv file
+    #     Closes the serial when done.
 
-        Parameters
-        ----------
-        event : event handler
-            A reference to the action that triggered this function.
-        """
-        # opens serial connection
-        newArduino = Arduino()
-        ser = newArduino.ser
+    #     Parameters
+    #     ----------
+    #     event : event handler
+    #         A reference to the action that triggered this function.
+    #     """
+    #     # opens serial connection
+    #     newArduino = Arduino()
+    #     ser = newArduino.ser
 
-        # creates a Dataset object to retrieve and store the data
-        newDataset = DataSet()
-        newDataset.runDataAcq(ser, limit= self.testDuration)
-        data = newDataset.dataset
+    #     # creates a Dataset object to retrieve and store the data
+    #     newDataset = DataSet()
+    #     newDataset.runDataAcq(ser, limit= self.testDuration)
+    #     data = newDataset.dataset
 
-        # takes the Dataset ojbect and saves its contents to file
-        util.data2csv(data)
+    #     # takes the Dataset ojbect and saves its contents to file
+    #     util.data2csv(data)
 
-        ser.close()
+    #     ser.close()
 
 
 

@@ -14,25 +14,6 @@ class DataSet():
         """
         self.dataset = [["Seconds", "X_Data", "Y Data"]]
 
-    def runDataAcq(self, serial, limit=10):
-        """
-        Starts the Arduino data collection loop to read serial input for a
-        given amount of time.
-
-        Parameters
-        ----------
-        serial : (py)serial obj
-            The serial from which to read / write from.
-        limit : int, optional
-            A set time limit (in seconds) to record analog data in. This
-            will change as various test runs are implemented.
-            The default is 10 (s).
-        """
-        start_time = time.time()
-        while (time.time() - start_time) < limit:
-
-            self.getSerialData(serial, time.time() - start_time)
-
     def getSerialData(self, serial, count):
         """
         Reads the incoming data from the serial port and adds it to this
@@ -49,12 +30,11 @@ class DataSet():
         try:
 
 
-            time, data_x, data_y = ser_bytes.split(',')
+            data_x, data_y = ser_bytes.split(',')
         except (IndexError, ValueError):
-            time = -1
             data_x = -1
             data_y = -1
-        data = [count, int(time)/1000, data_x, data_y]
+        data = [count, data_x, data_y]
 
         # keep for now until a live plot is implemented
         print(data)

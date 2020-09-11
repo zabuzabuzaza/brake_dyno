@@ -10,6 +10,10 @@ from mainFrame import MainFrame
 from mainPanel import MainPanel
 from settingsFrame import SettingsFrame
 
+from arduino import Arduino
+from dataset import DataSet
+import util
+
 import time
 
 
@@ -36,7 +40,8 @@ class Controller():
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
-        self.mainFrame.addStartTestHandler(self.executeAcq)
+        #self.mainFrame.addStartTestHandler(self.executeAcq)
+        self.mainFrame.addStartTestHandler(self.runTest)
 
         # disable main frame duration setting
         # self.mainPanel.addTextCtrlHandler(self.model.getTestDuration)
@@ -63,6 +68,38 @@ class Controller():
 
     def setRecords( self, event ):
         event.Skip()
+
+    def runTest(self, event):
+        """
+        Opens the serial port and starts the process of:
+            - reading the serial port
+            - data recording
+            - saving data to a csv file
+        Closes the serial when done.
+
+        Parameters
+        ----------
+        event : event handler
+            A reference to the action that triggered this function.
+        """
+
+        newArduino = Arduino()
+        ser = newArduino.ser
+
+        newDataSet = DataSet()
+
+        start_time = time.time()
+        while (time.time() - start_time) < self.model.testDuration:
+            newDataSet.getSerialData(ser, (time.time() - start_time))
+            self.mainPanel.m_gauge2.SetValue(time.time() - start_time)
+
+        self.model.dataSet = newDataSet.dataset
+        util.data2csv(self.model.dataSet)
+
+        ser.close()
+
+        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
+
 
     def executeAcq(self, event):
         self.model.executeAcq(event)
