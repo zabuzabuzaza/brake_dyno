@@ -6,8 +6,12 @@ Created on Sun Sep  6 18:10:48 2020
 """
 
 # from arduino import Arduino
-# from dataset import DataSet
 # import util
+
+import matplotlib
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Model():
@@ -16,9 +20,15 @@ class Model():
         For keeping track of all information of the GUI.
         """
         self.DEFAULT_TEST_DURATION = 5
+        self.PLOT_WINDOW = 40
 
         self.testDuration = self.DEFAULT_TEST_DURATION
         self.dataSet = [["Seconds", "X_Data", "Y Data"]]
+
+        self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        plt.ion()
+        self.fig, self.ax = plt.subplots()
+        self.line, = self.ax.plot(self.y_var)
 
         # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
@@ -73,6 +83,19 @@ class Model():
         print(data)
 
         self.dataSet.append(data)
+
+        return int(data_y)
+
+    def plotter(self, y_new):
+        self.y_var = np.append(self.y_var, y_new)
+        self.y_var = self.y_var[1:(self.PLOT_WINDOW + 1)]
+        self.line.set_ydata(self.y_var)
+        self.ax.relim()
+        self.ax.autoscale_view()
+
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
+
 
     def debugTestSettings(self):
         print(f"Temporary Duration: {self.testParameters['testDuration']}")

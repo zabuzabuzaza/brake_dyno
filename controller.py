@@ -12,7 +12,6 @@ from settingsFrame import SettingsFrame
 
 from model import Model
 from arduino import Arduino
-from dataset import DataSet
 import util
 
 import time
@@ -91,8 +90,10 @@ class Controller():
         start_time = time.time()
         while (time.time() - start_time) < self.model.testDuration:
             #newDataSet.getSerialData(ser, (time.time() - start_time))
-            self.model.getSerialData(ser, (time.time() - start_time))
+            y_data = self.model.getSerialData(ser, (time.time() - start_time))
             self.mainPanel.m_gauge2.SetValue(time.time() - start_time)
+
+            self.model.plotter(y_data)
 
             # create plot from Model
 
