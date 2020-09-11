@@ -26,9 +26,11 @@ class Model():
         self.dataSet = [["Seconds", "X_Data", "Y Data"]]
 
         self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
         plt.ion()
-        self.fig, self.ax = plt.subplots()
-        self.line, = self.ax.plot(self.y_var)
+        self.fig, self.axs = plt.subplots(nrows=2)
+        self.yline, = self.axs[0].plot(self.y_var)
+        self.xline, = self.axs[1].plot(self.x_var)
 
         # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
@@ -84,14 +86,21 @@ class Model():
 
         self.dataSet.append(data)
 
-        return int(data_y)
+        return int(data_x), int(data_y)
 
-    def plotter(self, y_new):
+    def plotter(self, x_new, y_new):
         self.y_var = np.append(self.y_var, y_new)
         self.y_var = self.y_var[1:(self.PLOT_WINDOW + 1)]
-        self.line.set_ydata(self.y_var)
-        self.ax.relim()
-        self.ax.autoscale_view()
+
+        self.x_var = np.append(self.x_var, x_new)
+        self.x_var = self.x_var[1:(self.PLOT_WINDOW + 1)]
+
+        self.yline.set_ydata(self.y_var)
+        self.xline.set_ydata(self.x_var)
+        self.axs[0].relim()
+        self.axs[1].relim()
+        self.axs[0].autoscale_view()
+        self.axs[1].autoscale_view()
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()

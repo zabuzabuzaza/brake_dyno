@@ -42,6 +42,8 @@ class Controller():
         self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
         self.mainFrame.addStartTestHandler(self.runTest)
 
+        self.mainPanel.m_gauge2.SetRange(self.model.testDuration)
+
         # disable main frame duration setting
         # self.mainPanel.addTextCtrlHandler(self.model.getTestDuration)
 
@@ -81,28 +83,36 @@ class Controller():
         event : event handler
             A reference to the action that triggered this function.
         """
-
+        # open serial port
         newArduino = Arduino()
         ser = newArduino.ser
 
-        #newDataSet = DataSet()
-
+        # set timer and acquisition rate
+        count = 0
         start_time = time.time()
         while (time.time() - start_time) < self.model.testDuration:
-            #newDataSet.getSerialData(ser, (time.time() - start_time))
-            y_data = self.model.getSerialData(ser, (time.time() - start_time))
+            # reads and stores serial data
+            x_data, y_data = self.model.getSerialData(ser, (time.time() - start_time))
+
+            # update test progress gauge
             self.mainPanel.m_gauge2.SetValue(time.time() - start_time)
 
-            self.model.plotter(y_data)
+            # to imcrease system performance, only plot every second datapoint
+            # maybe in the future i'll implement a variable acquisition rate
+            # depending on system performance
+            if count % 2 == 0:
+                self.model.plotter(x_data, y_data)
+            count += 1
 
-            # create plot from Model
+        # completes GUI updates
+        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
 
-        #self.model.dataSet = newDataSet.dataset
+        # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet)
 
         ser.close()
 
-        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
+
 
     def applyTestSettings(self, event, frame):
         self.model.applyTestSettings(event)
