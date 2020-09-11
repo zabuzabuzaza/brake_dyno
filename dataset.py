@@ -44,19 +44,17 @@ class DataSet():
             The serial from which to read / write from.
         """
 
-        ser_bytes = serial.readline()
-        # will need to explore int to byte conversion that doesn't scale the
-        # input weirdly. For now, takes the incoming bytes (b'000/n') and takes
-        # what we need, so it's slower than converting straight to bytes
+        ser_bytes = serial.readline()[:-1].decode("utf-8")
+        # need to implement multiple data recordings
         try:
-            data_tuple = str(ser_bytes[:-1])[2:-1]
-            string_tuple = data_tuple.split(',')
-            data_x = int(string_tuple[0])
-            data_y = int(string_tuple[1])
+
+
+            time, data_x, data_y = ser_bytes.split(',')
         except (IndexError, ValueError):
+            time = -1
             data_x = -1
             data_y = -1
-        data = [count, data_x, data_y]
+        data = [count, int(time)/1000, data_x, data_y]
 
         # keep for now until a live plot is implemented
         print(data)

@@ -14,6 +14,8 @@ int led_value2;
 int led_value3; 
 int led_value4; 
 
+long start_time; 
+
 void setup() {
   Serial.begin(9600); 
   digitalWrite(LED_BUILTIN, LOW); 
@@ -22,16 +24,21 @@ void setup() {
   pinMode(led_pin2, OUTPUT);
   pinMode(led_pin3, OUTPUT);
   pinMode(led_pin4, OUTPUT);
+
+
 }
 void loop() {
   //Reading from potentiometer
   inputX = analogRead(analogX);
   inputY = analogRead(analogY);
-
+  
+  Serial.print(millis() - start_time);
+  Serial.print(','); 
   Serial.print(inputX); 
   Serial.print(','); 
   Serial.print(inputY); 
   Serial.print('\n'); 
+
 
   if (Serial.available()){
     int inByte = Serial.read(); 
@@ -53,6 +60,6 @@ void loop() {
   analogWrite(led_pin3, led_value3);
   analogWrite(led_pin4, led_value4);
   
-  delay(10);
+  delay(50);
   
 }
