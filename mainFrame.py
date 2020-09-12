@@ -46,7 +46,8 @@ class MainFrame(wx.Frame):
 
         self.SetMenuBar( self.menubar )
 
-
+    def addCloseProgramHandler(self, handler):
+        self.Bind( wx.EVT_MENU, handler, id = self.menuExit.GetId() )
 
     def addRecordingSettingsHandler(self, handler):
         self.Bind( wx.EVT_MENU, handler, id = self.menuItem3.GetId() )

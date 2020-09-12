@@ -121,7 +121,7 @@ class MainPanel(wx.Panel):
         self.labelCOMPort.Wrap( WRAP )
         gridDTestParameters.Add( self.labelCOMPort, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
-        self.entryCOMPort = wx.TextCtrl( self, ID, "COM3", POSITION, SIZE, wx.TE_RIGHT )
+        self.entryCOMPort = wx.TextCtrl( self, ID, "COM3", POSITION, SIZE, wx.TE_PROCESS_ENTER|wx.TE_RIGHT )
         gridDTestParameters.Add( self.entryCOMPort, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
         #######################################################################
@@ -133,7 +133,7 @@ class MainPanel(wx.Panel):
 
         boxEFileName = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.entryFileName = wx.TextCtrl( self, ID, wx.EmptyString, POSITION, SIZE, wx.TE_RIGHT )
+        self.entryFileName = wx.TextCtrl( self, ID, wx.EmptyString, POSITION, SIZE, wx.TE_PROCESS_ENTER|wx.TE_RIGHT )
         boxEFileName.Add( self.entryFileName, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
         self.labelFileExtension = wx.StaticText( self, ID, ".csv", POSITION, SIZE, STYLE )
@@ -163,59 +163,59 @@ class MainPanel(wx.Panel):
         self.divider2 = wx.StaticLine( self, ID, POSITION, SIZE, wx.LI_HORIZONTAL )
         boxCTestParameters.Add( self.divider2, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
 
-        boxDTextInfo1 = wx.BoxSizer( wx.VERTICAL )
+        boxDTextInfo = wx.BoxSizer( wx.VERTICAL )
 
-        self.titleTestInfo1 = wx.StaticText( self, ID, "Test Infomation", POSITION, SIZE, STYLE )
-        self.titleTestInfo1.Wrap( WRAP )
-        boxDTextInfo1.Add( self.titleTestInfo1, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        self.titleTestInfo = wx.StaticText( self, ID, "Test Infomation", POSITION, SIZE, STYLE )
+        self.titleTestInfo.Wrap( WRAP )
+        boxDTextInfo.Add( self.titleTestInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.divider3 = wx.StaticLine( self, ID, POSITION, SIZE, wx.LI_HORIZONTAL )
-        boxDTextInfo1.Add( self.divider3, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
+        boxDTextInfo.Add( self.divider3, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
 
-        gridETestInfo1 = wx.FlexGridSizer( 0, 2, 0, 0 )
-        gridETestInfo1.SetFlexibleDirection( wx.BOTH )
-        gridETestInfo1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+        gridETestInfo = wx.FlexGridSizer( 0, 2, 0, 0 )
+        gridETestInfo.SetFlexibleDirection( wx.BOTH )
+        gridETestInfo.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
         #######################################################################
         # List of Information
 
-        self.labelSelectTest1 = wx.StaticText( self, ID, "Selected Test", POSITION, SIZE, wx.ALIGN_RIGHT )
-        self.labelSelectTest1.Wrap( WRAP )
-        gridETestInfo1.Add( self.labelSelectTest1, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
+        self.labelSelectTest = wx.StaticText( self, ID, "Selected Test", POSITION, SIZE, wx.ALIGN_RIGHT )
+        self.labelSelectTest.Wrap( WRAP )
+        gridETestInfo.Add( self.labelSelectTest, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelectTest1 = wx.StaticText( self, ID, "<get Test>", POSITION, SIZE, STYLE )
-        self.textSelectTest1.Wrap( WRAP )
-        gridETestInfo1.Add( self.textSelectTest1, PROPORTION0, wx.ALL, BORDER )
+        self.textSelectTest = wx.StaticText( self, ID, "<get Test>", POSITION, SIZE, STYLE )
+        self.textSelectTest.Wrap( WRAP )
+        gridETestInfo.Add( self.textSelectTest, PROPORTION0, wx.ALL, BORDER )
 
-        self.labelSelectParams1 = wx.StaticText( self, ID, "Parameters\nto be\nrecorded", POSITION, SIZE, wx.ALIGN_RIGHT )
-        self.labelSelectParams1.Wrap( WRAP )
-        gridETestInfo1.Add( self.labelSelectParams1, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
+        self.labelSelectParams = wx.StaticText( self, ID, "Parameters\nto be\nrecorded", POSITION, SIZE, wx.ALIGN_RIGHT )
+        self.labelSelectParams.Wrap( WRAP )
+        gridETestInfo.Add( self.labelSelectParams, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelectParams1 = wx.StaticText( self, ID, "list of\nparams to\nbe recorded", POSITION, SIZE, STYLE )
-        self.textSelectParams1.Wrap( WRAP )
-        gridETestInfo1.Add( self.textSelectParams1, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
+        self.textSelectParams = wx.StaticText( self, ID, "list of\nparams to\nbe recorded", POSITION, SIZE, STYLE )
+        self.textSelectParams.Wrap( WRAP )
+        gridETestInfo.Add( self.textSelectParams, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
-        self.labelCOMStatus1 = wx.StaticText( self, ID, "COM Port\nStatus", POSITION, SIZE, wx.ALIGN_RIGHT )
-        self.labelCOMStatus1.Wrap( WRAP )
-        gridETestInfo1.Add( self.labelCOMStatus1, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
+        self.labelCOMStatus = wx.StaticText( self, ID, "COM Port\nStatus", POSITION, SIZE, wx.ALIGN_RIGHT )
+        self.labelCOMStatus.Wrap( WRAP )
+        gridETestInfo.Add( self.labelCOMStatus, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textCOMStatus1 = wx.StaticText( self, ID, "<get Status>", POSITION, SIZE, STYLE )
-        self.textCOMStatus1.Wrap( WRAP )
-        gridETestInfo1.Add( self.textCOMStatus1, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
+        self.textCOMStatus = wx.StaticText( self, ID, "<get Status>", POSITION, SIZE, STYLE )
+        self.textCOMStatus.Wrap( WRAP )
+        gridETestInfo.Add( self.textCOMStatus, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
-        self.labelSelectFileName1 = wx.StaticText( self, ID, "File will be\nsaved as", POSITION, SIZE, wx.ALIGN_RIGHT )
-        self.labelSelectFileName1.Wrap( WRAP )
-        gridETestInfo1.Add( self.labelSelectFileName1, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
+        self.labelSelectFileName = wx.StaticText( self, ID, "File will be\nsaved as", POSITION, SIZE, wx.ALIGN_RIGHT )
+        self.labelSelectFileName.Wrap( WRAP )
+        gridETestInfo.Add( self.labelSelectFileName, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelecFileName1 = wx.StaticText( self, ID, "<get Name>", POSITION, SIZE, STYLE )
-        self.textSelecFileName1.Wrap( WRAP )
-        gridETestInfo1.Add( self.textSelecFileName1, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
+        self.textSelectFileName = wx.StaticText( self, ID, "<get Name>", POSITION, SIZE, STYLE )
+        self.textSelectFileName.Wrap( WRAP )
+        gridETestInfo.Add( self.textSelectFileName, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
-        boxDTextInfo1.Add( gridETestInfo1, PROPORTION1, wx.EXPAND, BORDER )
+        boxDTextInfo.Add( gridETestInfo, PROPORTION1, wx.EXPAND, BORDER )
 
-        boxCTestParameters.Add( boxDTextInfo1, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        boxCTestParameters.Add( boxDTextInfo, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        boxBTop.Add( boxCTestParameters, PROPORTION1, wx.EXPAND, BORDER )
+        boxBTop.Add( boxCTestParameters, PROPORTION0, wx.EXPAND, BORDER )
 
         #######################################################################
         # / LEFT SETTINGS
@@ -268,19 +268,19 @@ class MainPanel(wx.Panel):
         self.pageCPlot.SetMinSize( ( 800,-1 ) )
 
         self.tab1 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
-        bSizer30 = wx.BoxSizer( wx.VERTICAL )
+        self.bSizer30 = wx.BoxSizer( wx.VERTICAL )
 
         self.m_bpButton3 = wx.BitmapButton( self.tab1, ID, wx.Bitmap( "graph1.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, wx.BU_AUTODRAW )
-        bSizer30.Add( self.m_bpButton3, PROPORTION0, wx.ALL, BORDER )
+        self.bSizer30.Add( self.m_bpButton3, PROPORTION0, wx.ALL, BORDER )
 
         self.statixPlaceholder = wx.StaticText( self.tab1, ID, "the plot goes here", POSITION, SIZE, STYLE )
         self.statixPlaceholder.Wrap( WRAP )
-        bSizer30.Add( self.statixPlaceholder, PROPORTION0, wx.ALL, BORDER )
+        self.bSizer30.Add( self.statixPlaceholder, PROPORTION0, wx.ALL, BORDER )
 
 
-        self.tab1.SetSizer( bSizer30 )
+        self.tab1.SetSizer( self.bSizer30 )
         self.tab1.Layout()
-        bSizer30.Fit( self.tab1 )
+        self.bSizer30.Fit( self.tab1 )
         self.pageCPlot.AddPage( self.tab1, u"Main Tab", False )
         self.m_panel2 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
         self.pageCPlot.AddPage( self.m_panel2, u"Tab 2", True )
@@ -363,9 +363,9 @@ class MainPanel(wx.Panel):
         #######################################################################
         # Progress Bar
 
-        self.m_gauge5 = wx.Gauge( self, ID, self.gaugeRange, POSITION, SIZE, wx.GA_HORIZONTAL )
-        self.m_gauge5.SetValue( 0 )
-        boxCProgress.Add( self.m_gauge5, PROPORTION0, wx.ALL|wx.EXPAND, BORDER )
+        self.progressGauge = wx.Gauge( self, ID, self.gaugeRange, POSITION, SIZE, wx.GA_HORIZONTAL )
+        self.progressGauge.SetValue( 0 )
+        boxCProgress.Add( self.progressGauge, PROPORTION0, wx.ALL|wx.EXPAND, BORDER )
 
         #######################################################################
 
@@ -383,29 +383,53 @@ class MainPanel(wx.Panel):
 
         self.SetSizer( boxA )
 
-        # bSizer1 = wx.BoxSizer( wx.VERTICAL )
+    def updateSettings(self, model):
+        self.textSelectTest.SetLabel( model.testSchedule )
+        self.textSelectParams.SetLabel( str(model.testParams) )
+        self.textCOMStatus.SetLabel( model.COMPort )
+        self.textSelectFileName.SetLabel( model.fileName )
 
-        # bSizer7 = wx.BoxSizer( wx.VERTICAL )
+    def addTestScheduleHandler(self, handler):
+        self.choiceSchedule.Bind( wx.EVT_CHOICE, handler )
 
-        # bSizer7.AddSpacer(0)
+    def addXRecordHandler(self, handler):
+        self.checkJoyX.Bind( wx.EVT_CHECKBOX, handler )
 
-        # self.m_staticText5 = wx.StaticText( self, ID, u"Test Progress", POSITION, SIZE, STYLE )
-        # self.m_staticText5.Wrap( WRAP )
-        # bSizer7.Add( self.m_staticText5, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+    def addYRecordHandler(self, handler):
+        self.checkJoyY.Bind( wx.EVT_CHECKBOX, handler )
 
-        # self.m_gauge2 = wx.Gauge( self, ID, 100, POSITION, SIZE, wx.GA_HORIZONTAL )
-        # self.m_gauge2.SetValue( 0 )
-        # bSizer7.Add( self.m_gauge2, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+    def addRotorTRecordHandler(self, handler):
+        self.checkRotorTemp.Bind( wx.EVT_CHECKBOX, handler )
 
-        # bSizer7.AddSpacer(0)
+    def addCalipTRecordHandler(self, handler):
+        self.checkCalipTemp.Bind( wx.EVT_CHECKBOX, handler )
 
-        # bSizer1.Add( bSizer7, PROPORTION1, wx.EXPAND, BORDER )
-        # self.SetSizer(bSizer1)
+    def addMotorRecordHandler(self, handler):
+        self.checkMotorSpeed.Bind( wx.EVT_CHECKBOX, handler )
 
+    def addCOMPortHandler(self, handler):
+        self.entryCOMPort.Bind( wx.EVT_TEXT, handler )
+        self.entryCOMPort.Bind( wx.EVT_TEXT_ENTER, handler )
 
-    def addTextCtrlHandler(self, handler):
-        self.m_textCtrl2.Bind( wx.EVT_TEXT, handler )
-        self.m_textCtrl2.Bind( wx.EVT_TEXT_ENTER, handler )
+    def addFileNameHandler(self, handler):
+        self.entryFileName.Bind( wx.EVT_TEXT, handler )
+        self.entryFileName.Bind( wx.EVT_TEXT_ENTER, handler )
+
+    def addApplySettingsHandler(self, handler):
+        self.buttonApply.Bind( wx.EVT_BUTTON, handler )
+
+    def addDefaultSettingsHandler(self, handler):
+        self.buttonDefault.Bind( wx.EVT_BUTTON, handler )
+
+    def addStartTestHandler(self, handler):
+        self.buttonRunTest.Bind( wx.EVT_BUTTON, handler )
+
+    def addStopTestHander(self, handler):
+        self.buttonStopTest.Bind( wx.EVT_BUTTON, handler )
+
+    def addToPanel(self, canvas):
+        self.bSizer30.Add(canvas)
+        self.Fit()
 
 
 
