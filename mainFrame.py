@@ -9,7 +9,7 @@ import wx.xrc
 
 
 class MainFrame(wx.Frame):
-    def __init__(self, parent, title, winSize=( 800,700 )):
+    def __init__(self, parent, title, winSize=( 1200,1000 )):
         """
         Initialises the main GUI frame for all user interation and event
         handling.
@@ -28,27 +28,28 @@ class MainFrame(wx.Frame):
 
         super(MainFrame, self).__init__(parent, title = title, size = winSize)
 
-        self.m_menubar1 = wx.MenuBar( 0 )
-        self.m_menu1 = wx.Menu()
-        self.m_menuItem1 = wx.MenuItem( self.m_menu1, ID, u"Exit", EMPTYNAME, ITEMTYPE )
-        self.m_menu1.Append( self.m_menuItem1 )
+        self.menubar = wx.MenuBar( 0 )
+        self.menu1 = wx.Menu()
+        self.menuExit = wx.MenuItem( self.menu1, ID, u"Exit", EMPTYNAME, ITEMTYPE )
+        self.menu1.Append( self.menuExit )
 
-        self.m_menubar1.Append( self.m_menu1, u"File" )
+        self.menubar.Append( self.menu1, u"File" )
 
-        self.m_menu2 = wx.Menu()
-        self.m_menuItem3 = wx.MenuItem( self.m_menu2, ID, u"Recording Settings", EMPTYNAME, ITEMTYPE )
-        self.m_menu2.Append( self.m_menuItem3 )
+        self.menu2 = wx.Menu()
+        self.menuItem3 = wx.MenuItem( self.menu2, ID, u"Recording Settings", EMPTYNAME, ITEMTYPE )
+        self.menu2.Append( self.menuItem3 )
 
-        self.m_menuItem4 = wx.MenuItem( self.m_menu2, ID, u"Start Recording", EMPTYNAME, ITEMTYPE )
-        self.m_menu2.Append( self.m_menuItem4 )
+        self.menuItem4 = wx.MenuItem( self.menu2, ID, u"Start Recording", EMPTYNAME, ITEMTYPE )
+        self.menu2.Append( self.menuItem4 )
 
-        self.m_menubar1.Append( self.m_menu2, u"Test" )
+        self.menubar.Append( self.menu2, u"Test (deprecated)" )
 
-        self.SetMenuBar( self.m_menubar1 )
+        self.SetMenuBar( self.menubar )
+
 
 
     def addRecordingSettingsHandler(self, handler):
-        self.Bind( wx.EVT_MENU, handler, id = self.m_menuItem3.GetId() )
+        self.Bind( wx.EVT_MENU, handler, id = self.menuItem3.GetId() )
 
     def addStartTestHandler(self, handler):
-        self.Bind( wx.EVT_MENU, handler, id = self.m_menuItem4.GetId() )
+        self.Bind( wx.EVT_MENU, handler, id = self.menuItem4.GetId() )

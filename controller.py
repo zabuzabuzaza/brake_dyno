@@ -18,7 +18,7 @@ class Controller():
         """
         For event handling for all frames and panels.
         """
-        WINDOW_SIZE = (800, 500)
+        WINDOW_SIZE = (1000, 1000)
         WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
 
         self.model = Model()
@@ -30,7 +30,8 @@ class Controller():
         self.mainFrame.Show()
 
         self.mainFrame.Layout()
-        self.mainFrame.m_statusBar1 = self.mainFrame.CreateStatusBar( 3 )
+        self.statusBar = self.mainFrame.CreateStatusBar( 1 )
+
 
         self.addMainFrameEventHandlers()
 
