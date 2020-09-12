@@ -9,6 +9,9 @@ Created on Sun Sep  6 18:10:48 2020
 # import util
 
 import matplotlib
+#matplotlib.use('WXAgg')
+
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,6 +34,8 @@ class Model():
         self.fig, self.axs = plt.subplots(nrows=2)
         self.yline, = self.axs[0].plot(self.y_var)
         self.xline, = self.axs[1].plot(self.x_var)
+
+        self.canvas = None
 
         # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
@@ -87,6 +92,10 @@ class Model():
         self.dataSet.append(data)
 
         return int(data_x), int(data_y)
+
+    def createCanvas(self, panel):
+        self.canvas = FigureCanvas(panel, -1, self.fig)
+
 
     def plotter(self, x_new, y_new):
         self.y_var = np.append(self.y_var, y_new)

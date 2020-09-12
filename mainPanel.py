@@ -33,7 +33,7 @@ class MainPanel(wx.Panel):
 
         super().__init__(parent)
 
-        bSizer1 = wx.BoxSizer( wx.VERTICAL )
+        self.bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
         bSizer7 = wx.BoxSizer( wx.VERTICAL )
 
@@ -64,9 +64,12 @@ class MainPanel(wx.Panel):
 
         bSizer7.AddSpacer(0)
 
-        bSizer1.Add( bSizer7, PROPORTION1, wx.EXPAND, BORDER )
-        self.SetSizer(bSizer1)
+        self.bSizer1.Add( bSizer7, PROPORTION1, wx.EXPAND, BORDER )
+        self.SetSizer(self.bSizer1)
 
+    def addToPanel(self, canvas):
+        self.bSizer1.Add(canvas)
+        self.Fit()
 
     def addTextCtrlHandler(self, handler):
         self.m_textCtrl2.Bind( wx.EVT_TEXT, handler )

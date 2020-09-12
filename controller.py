@@ -87,6 +87,10 @@ class Controller():
         newArduino = Arduino()
         ser = newArduino.ser
 
+        # add plot to GUI
+        self.model.createCanvas(self.mainPanel)
+        self.mainPanel.addToPanel(self.model.canvas)
+
         # set timer and acquisition rate
         count = 0
         start_time = time.time()
@@ -100,12 +104,13 @@ class Controller():
             # to imcrease system performance, only plot every second datapoint
             # maybe in the future i'll implement a variable acquisition rate
             # depending on system performance
-            if count % 2 == 0:
+            if count % 4 == 0:
                 self.model.plotter(x_data, y_data)
+                self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
             count += 1
 
         # completes GUI updates
-        self.mainPanel.m_gauge2.SetValue(self.model.testDuration)
+
 
         # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet)
