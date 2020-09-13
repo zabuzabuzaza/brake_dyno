@@ -5,41 +5,30 @@ Created on Sun Sep  6 18:10:48 2020
 @author: iamde
 """
 
-# from arduino import Arduino
-# import util
-
 import matplotlib
 #matplotlib.use('WXAgg')
-
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
-
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 class Model():
     def __init__(self):
         """
         For keeping track of all information of the GUI.
         """
-        self.DEFAULT_TEST_DURATION = 5
+        self.DEFAULT_TEST_DURATION = 20
         self.PLOT_WINDOW = 40
 
         self.testDuration = self.DEFAULT_TEST_DURATION
         self.dataSet = [["Seconds", "X_Data", "Y Data"]]
 
-        self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
-        self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
-        plt.ion()
-        self.fig, self.axs = plt.subplots(nrows=2)
-        self.yline, = self.axs[0].plot(self.y_var)
-        self.xline, = self.axs[1].plot(self.x_var)
-
-        self.canvas = None
+        self.testSchedule = "Joystick"
+        self.testParams = ["X-Stick", "Y-Stick"]
+        self.COMPort = "COM3"
+        self.fileName = "data.csv"
 
         # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
-
 
         self.variables = {"testLength": 10}
         self.interactables = {}
@@ -68,22 +57,20 @@ class Model():
         """
         Reads the incoming data from the serial port and adds it to this
         object's data structure.
-
         Parameters
         ----------
         serial : (py)serial obj
             The serial from which to read / write from.
         """
-
         ser_bytes = serial.readline()[:-1].decode("utf-8")
+
         # need to implement multiple data recordings
         try:
-
-
             data_x, data_y = ser_bytes.split(',')
         except (IndexError, ValueError):
             data_x = -1
             data_y = -1
+
         data = [count, data_x, data_y]
 
         # keep for now until a live plot is implemented
@@ -91,11 +78,27 @@ class Model():
 
         self.dataSet.append(data)
 
-        return int(data_x), int(data_y)
+        try:
+            int_x, int_y = int(data_x), int(data_y)
+        except ValueError:
+            int_x, int_y = 0
+
+        return int_x, int_y
+
 
     def createCanvas(self, panel):
-        self.canvas = FigureCanvas(panel, -1, self.fig)
+        #self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        #self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        #plt.ion()
+        self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        self.fig, self.axs = plt.subplots(nrows=2)
 
+        self.fig.set_size_inches(10, 5)
+        self.yline, = self.axs[0].plot(self.y_var)
+        self.xline, = self.axs[1].plot(self.x_var)
+
+        #self.canvas = FigureCanvas(panel, -1, self.fig)
 
     def plotter(self, x_new, y_new):
         self.y_var = np.append(self.y_var, y_new)
@@ -106,6 +109,7 @@ class Model():
 
         self.yline.set_ydata(self.y_var)
         self.xline.set_ydata(self.x_var)
+
         self.axs[0].relim()
         self.axs[1].relim()
         self.axs[0].autoscale_view()
