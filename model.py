@@ -78,8 +78,12 @@ class Model():
 
         self.dataSet.append(data)
 
+        try:
+            int_x, int_y = int(data_x), int(data_y)
+        except ValueError:
+            int_x, int_y = 0
 
-        return int(data_x), int(data_y)
+        return int_x, int_y
 
 
     def createCanvas(self, panel):
@@ -89,6 +93,8 @@ class Model():
         self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
         self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
         self.fig, self.axs = plt.subplots(nrows=2)
+
+        self.fig.set_size_inches(10, 5)
         self.yline, = self.axs[0].plot(self.y_var)
         self.xline, = self.axs[1].plot(self.x_var)
 

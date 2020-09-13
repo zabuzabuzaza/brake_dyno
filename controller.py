@@ -25,7 +25,7 @@ class Controller():
         WINDOW_SIZE = (1800, 1000)
         WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
 
-        self.testSchedules = TestSchedules()
+
         self.model = Model()
 
         self.mainFrame = MainFrame(None, WINDOW_TITLE, WINDOW_SIZE)
@@ -134,13 +134,32 @@ class Controller():
         except (ValueError, KeyError):
             self.model.fileName = "data.csv"
         self.mainPanel.updateSettings(self.model)
-        self.mainPanel.updateConditions(self.model, "Test not started.")
 
     def defaultSettings( self, event ):
         self.model.testSchedule = "Joystick"
         self.model.COMPort = "COM3"
         self.model.fileName = "data.csv"
         self.mainPanel.updateSettings(self.model)
+
+    # def startTest2(self, event):
+    #     # open serial port
+    #     newArduino = Arduino()
+    #     ser = newArduino.ser
+
+    #     newSchedule = TestSchedules()
+
+    #     # add plot to GUI
+    #     self.model.createCanvas(self.mainPanel.tab1)
+
+    #     while not newSchedule.testEnd:
+    #         if newSchedule.next:
+    #             newSchedule.scheduleJoystick()
+    #             print(newSchedule.currentModule)
+
+
+    #             newSchedule.next = True
+
+    #     print("test ended successfully")
 
     def startTest(self, event):
         """

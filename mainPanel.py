@@ -5,6 +5,7 @@ Class for plotting
 
 import wx
 import wx.xrc
+import wx.adv
 
 class MainPanel(wx.Panel):
     def __init__(self, parent):
@@ -30,6 +31,9 @@ class MainPanel(wx.Panel):
         PROPORTION0 = 0
         PROPORTION1 = 1
         WRAP = -1
+
+        # Other Constants
+        self.scheduleList = ["Joystick", "Schedule A", "Schedule B", "Schedule C", EMPTY]
 
         super().__init__(parent)
 
@@ -72,8 +76,7 @@ class MainPanel(wx.Panel):
         self.labelSchedule.Wrap( WRAP )
         gridDTestParameters.Add( self.labelSchedule, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, BORDER )
 
-        choiceScheduleChoices = [ "Joystick", "Schedule A", "Schedule B", "Schedule C", EMPTY ]
-        self.choiceSchedule = wx.Choice( self,ID, POSITION, SIZE, choiceScheduleChoices, STYLE )
+        self.choiceSchedule = wx.Choice( self,ID, POSITION, SIZE, self.scheduleList, STYLE )
         self.choiceSchedule.SetSelection( 0 )
         gridDTestParameters.Add( self.choiceSchedule, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
@@ -276,9 +279,9 @@ class MainPanel(wx.Panel):
         self.bitmapUQR = wx.StaticBitmap( self.tab1, ID, wx.Bitmap( "uqr_logo.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
         self.boxDTab1.Add( self.bitmapUQR, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.staticPlaceholder = wx.StaticText( self.tab1, ID, "the plot goes here", POSITION, SIZE, STYLE )
+        self.staticPlaceholder = wx.StaticText( self.tab1, ID, "placeholder", POSITION, SIZE, STYLE )
         self.staticPlaceholder.Wrap( WRAP )
-        self.boxDTab1.Add( self.staticPlaceholder, PROPORTION0, wx.ALL, BORDER )
+        self.boxDTab1.Add( self.staticPlaceholder, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.tab1.SetSizer( self.boxDTab1 )
         self.tab1.Layout()
@@ -304,10 +307,13 @@ class MainPanel(wx.Panel):
         self.textGeneralInfo.Wrap( WRAP )
         self.boxDTab2.Add( self.textGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
+        self.bitmapGraph = wx.StaticBitmap( self.tab2, ID, wx.Bitmap( "graph1.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
+        self.boxDTab2.Add( self.bitmapGraph, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+
         self.tab2.SetSizer( self.boxDTab2 )
         self.tab2.Layout()
         self.boxDTab2.Fit( self.tab2 )
-        self.pageCPlot.AddPage( self.tab2, u"Tab 2", True )
+        self.pageCPlot.AddPage( self.tab2, "Schedule Information", True )
 
         boxBTop.Add( self.pageCPlot, PROPORTION1, wx.EXPAND |wx.ALL, BORDER )
 
@@ -359,11 +365,11 @@ class MainPanel(wx.Panel):
 
         boxDCurrentModule = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.labelCurrentModule = wx.StaticText( self, ID, "Now running module: ", POSITION, SIZE, STYLE )
+        self.labelCurrentModule = wx.StaticText( self, ID, "Now running Schedule: ", POSITION, SIZE, STYLE )
         self.labelCurrentModule.Wrap( WRAP )
         boxDCurrentModule.Add( self.labelCurrentModule, PROPORTION0, FLAG, BORDER )
 
-        self.testCurrentModule = wx.StaticText( self, ID, "No Module Selected", POSITION, SIZE, STYLE )
+        self.testCurrentModule = wx.StaticText( self, ID, "No Schedule Selected", POSITION, SIZE, STYLE )
         self.testCurrentModule.Wrap( WRAP )
         boxDCurrentModule.Add( self.testCurrentModule, PROPORTION0, FLAG, BORDER )
 
@@ -412,10 +418,30 @@ class MainPanel(wx.Panel):
         self.textSelectFileName.SetLabel( model.fileName )
 
         self.testCurrentModule.SetLabel( model.testSchedule )
+        self.updateScheduleInfo(model)
 
     def updateConditions(self, time):
         self.progressGauge.SetValue( time )
         self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
+
+    def updateScheduleInfo(self, model):
+        if model.testSchedule == self.scheduleList[0]:
+            textBlock = ("A testing schedule with a joystick as an analog input.\n"
+                         "The test lasts 20 seconds or until the stop button\n"
+                         "is pressed.")
+        elif model.testSchedule == self.scheduleList[1]:
+            textBlock = ("The proposed Schedule A for the testign for brake squeal.\n"
+                         "I've no clue how in implement this yet. ")
+        elif model.testSchedule == self.scheduleList[2]:
+            textBlock = ("The proposed Schedule B for the testign for brake squeal.\n"
+                         "I've no clue how in implement this yet. ")
+        elif model.testSchedule == self.scheduleList[3]:
+            textBlock = ("The proposed Schedule C for the testign for brake squeal.\n"
+                         "I've no clue how in implement this yet. ")
+        else:
+            textBlock = "No Schedule Selected"
+
+        self.textGeneralInfo.SetLabel(textBlock)
 
     def addTestScheduleHandler(self, handler):
         self.choiceSchedule.Bind( wx.EVT_CHOICE, handler )

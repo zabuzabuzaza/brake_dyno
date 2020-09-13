@@ -13,19 +13,29 @@ class TestSchedules():
         """
         self.testEnd = False
         self.currentModule = "Not testing"
+        self.next = True
+
+        self.moduleList = [self.module1, self.module2, self.module3, self.module4, self.module5]
 
     def scheduleJoystick(self):
-        self.testEnd = False
 
-        self.module4()
-        self.module5()
-        self.module6()
-        self.module7()
-        self.module8()
+        if next:
+            try:
+                self.moduleList[0]()
+            except IndexError:
+                print("Test ended")
+                self.testEnd = True
+                return
+
+            #print(f"just did {self.moduleList[0]}")
+            self.moduleList = self.moduleList[1:]
+            #print(f"List is now {self.moduleList}")
+            time.sleep(1)
+            print("Sleep")
+            self.next = False
+
 
         #time.sleep(5)
-
-        self.testEnd = True
 
     def scheduleA(self):
         self.module1()
