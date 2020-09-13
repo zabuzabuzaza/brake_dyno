@@ -7,7 +7,6 @@ Created on Sun Sep  6 17:47:15 2020
 import wx
 from mainFrame import MainFrame
 from mainPanel import MainPanel
-from settingsFrame import SettingsFrame
 
 from model import Model
 from arduino import Arduino

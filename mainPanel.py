@@ -276,7 +276,7 @@ class MainPanel(wx.Panel):
         self.tab1 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
         self.boxDTab1 = wx.BoxSizer( wx.VERTICAL )
 
-        self.bitmapUQR = wx.StaticBitmap( self.tab1, ID, wx.Bitmap( "uqr_logo.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
+        self.bitmapUQR = wx.StaticBitmap( self.tab1, ID, wx.Bitmap( "images/uqr_logo.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
         self.boxDTab1.Add( self.bitmapUQR, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.staticPlaceholder = wx.StaticText( self.tab1, ID, "placeholder", POSITION, SIZE, STYLE )
@@ -307,7 +307,7 @@ class MainPanel(wx.Panel):
         self.textGeneralInfo.Wrap( WRAP )
         self.boxDTab2.Add( self.textGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.bitmapGraph = wx.StaticBitmap( self.tab2, ID, wx.Bitmap( "graph1.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
+        self.bitmapGraph = wx.StaticBitmap( self.tab2, ID, wx.Bitmap( "images/graph1.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
         self.boxDTab2.Add( self.bitmapGraph, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
         self.tab2.SetSizer( self.boxDTab2 )
