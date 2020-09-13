@@ -28,10 +28,8 @@ Done
 ====================
 - Recording functionality with GUI and a button is done and works alright
 - live plot in a separate window
-- put pyplot window into wx frame
 
 To Do
 ======
-- flesh out the GUI 
 - add some test runs for analog/digital output
 - figure out a basic PID implementation 
