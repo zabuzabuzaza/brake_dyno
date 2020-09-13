@@ -11,6 +11,7 @@ from settingsFrame import SettingsFrame
 
 from model import Model
 from arduino import Arduino
+from schedules import TestSchedules
 import util
 
 import time
@@ -21,10 +22,12 @@ class Controller():
         """
         For event handling for all frames and panels.
         """
-        WINDOW_SIZE = (1000, 1000)
+        WINDOW_SIZE = (1800, 1000)
         WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
 
+        self.testSchedules = TestSchedules()
         self.model = Model()
+
         self.mainFrame = MainFrame(None, WINDOW_TITLE, WINDOW_SIZE)
 
         self.mainPanel = MainPanel(self.mainFrame)
@@ -85,8 +88,10 @@ class Controller():
         self.mainFrame.Close()
 
     def setTestSchedule( self, event ):
-        scheduleName = event.GetString()
-        print(scheduleName)
+        try:
+            self.model.testParameters['testSchedule'] = event.GetString()
+        except (ValueError, KeyError):
+            self.model.testParameters['testSchedule'] = "Joystick"
 
     def setXRecord( self, event ):
         print("X rec")
@@ -108,18 +113,18 @@ class Controller():
             self.model.testParameters['COMPort'] = event.GetString()
         except (ValueError, KeyError):
             self.model.testParameters['COMPort'] = "COM3"
-        #self.model.COMPort = event.GetString()
-        #print(self.model.COMPort)
 
     def setFileName( self, event ):
         try:
             self.model.testParameters['fileName'] = event.GetString() + ".csv"
         except (ValueError, KeyError):
             self.model.testParameters['fileName'] = "data.csv"
-        #self.model.fileName = event.GetString() + ".csv"
-        #print(self.model.fileName)
 
     def applySettings( self, event ):
+        try:
+            self.model.testSchedule = self.model.testParameters['testSchedule']
+        except (ValueError, KeyError):
+            self.model.testSchedule = "Joystick"
         try:
             self.model.COMPort = self.model.testParameters['COMPort']
         except (ValueError, KeyError):
@@ -129,13 +134,13 @@ class Controller():
         except (ValueError, KeyError):
             self.model.fileName = "data.csv"
         self.mainPanel.updateSettings(self.model)
-        print("apply")
+        self.mainPanel.updateConditions(self.model, "Test not started.")
 
     def defaultSettings( self, event ):
+        self.model.testSchedule = "Joystick"
         self.model.COMPort = "COM3"
         self.model.fileName = "data.csv"
         self.mainPanel.updateSettings(self.model)
-        print("default")
 
     def startTest(self, event):
         """
@@ -155,7 +160,7 @@ class Controller():
 
         # add plot to GUI
         self.model.createCanvas(self.mainPanel.tab1)
-        self.mainPanel.addToPanel(self.model.canvas)
+        # self.mainPanel.addToPanel(self.model.canvas)
 
         # set timer and acquisition rate
         count = 0
@@ -166,18 +171,18 @@ class Controller():
             # reads and stores serial data
             x_data, y_data = self.model.getSerialData(ser, (time.time() - start_time))
 
-            # update test progress gauge
-            self.mainPanel.progressGauge.SetValue(time.time() - start_time)
+            # update test conditions
+            self.mainPanel.updateConditions(time.time() - start_time)
 
             # to increase system performance, only plot every few datapoints
             # maybe in the future i'll implement a variable acquisition rate
             # depending on system performance
-            if count % 4 == 0:
+            if count % 2 == 0:
                 self.model.plotter(x_data, y_data)
 
             count += 1
 
-        self.mainPanel.progressGauge.SetValue(self.model.testDuration)
+        self.mainPanel.updateConditions(self.model.testDuration)
         # completes GUI updates
         # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet)

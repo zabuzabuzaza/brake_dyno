@@ -27,13 +27,6 @@ class Model():
         self.COMPort = "COM3"
         self.fileName = "data.csv"
 
-        self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
-        self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
-        plt.ion()
-        self.fig, self.axs = plt.subplots(nrows=2)
-        self.yline, = self.axs[0].plot(self.y_var)
-        self.xline, = self.axs[1].plot(self.x_var)
-        self.canvas = None
         # temporarily stores settings that will either be applied or cancelled
         self.testParameters = {}
 
@@ -85,12 +78,21 @@ class Model():
 
         self.dataSet.append(data)
 
+
         return int(data_x), int(data_y)
 
 
     def createCanvas(self, panel):
-        self.canvas = FigureCanvas(panel, -1, self.fig)
+        #self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        #self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        #plt.ion()
+        self.y_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        self.x_var = np.array(np.zeros([self.PLOT_WINDOW]))
+        self.fig, self.axs = plt.subplots(nrows=2)
+        self.yline, = self.axs[0].plot(self.y_var)
+        self.xline, = self.axs[1].plot(self.x_var)
 
+        #self.canvas = FigureCanvas(panel, -1, self.fig)
 
     def plotter(self, x_new, y_new):
         self.y_var = np.append(self.y_var, y_new)

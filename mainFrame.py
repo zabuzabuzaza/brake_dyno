@@ -35,14 +35,14 @@ class MainFrame(wx.Frame):
 
         self.menubar.Append( self.menu1, u"File" )
 
-        self.menu2 = wx.Menu()
-        self.menuItem3 = wx.MenuItem( self.menu2, ID, u"Recording Settings", EMPTYNAME, ITEMTYPE )
-        self.menu2.Append( self.menuItem3 )
+        # self.menu2 = wx.Menu()
+        # self.menuItem3 = wx.MenuItem( self.menu2, ID, u"Recording Settings", EMPTYNAME, ITEMTYPE )
+        # self.menu2.Append( self.menuItem3 )
 
-        self.menuItem4 = wx.MenuItem( self.menu2, ID, u"Start Recording", EMPTYNAME, ITEMTYPE )
-        self.menu2.Append( self.menuItem4 )
+        # self.menuItem4 = wx.MenuItem( self.menu2, ID, u"Start Recording", EMPTYNAME, ITEMTYPE )
+        # self.menu2.Append( self.menuItem4 )
 
-        self.menubar.Append( self.menu2, u"Test (deprecated)" )
+        # self.menubar.Append( self.menu2, u"Test (deprecated)" )
 
         self.SetMenuBar( self.menubar )
 

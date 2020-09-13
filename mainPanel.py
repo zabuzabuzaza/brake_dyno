@@ -31,9 +31,9 @@ class MainPanel(wx.Panel):
         PROPORTION1 = 1
         WRAP = -1
 
-        self.gaugeRange = 100
-
         super().__init__(parent)
+
+        self.gaugeRange = 100
 
         boxA = wx.BoxSizer( wx.VERTICAL )
 
@@ -183,7 +183,7 @@ class MainPanel(wx.Panel):
         self.labelSelectTest.Wrap( WRAP )
         gridETestInfo.Add( self.labelSelectTest, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelectTest = wx.StaticText( self, ID, "<get Test>", POSITION, SIZE, STYLE )
+        self.textSelectTest = wx.StaticText( self, ID, "No Test\nSelected", POSITION, SIZE, STYLE )
         self.textSelectTest.Wrap( WRAP )
         gridETestInfo.Add( self.textSelectTest, PROPORTION0, wx.ALL, BORDER )
 
@@ -191,7 +191,7 @@ class MainPanel(wx.Panel):
         self.labelSelectParams.Wrap( WRAP )
         gridETestInfo.Add( self.labelSelectParams, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelectParams = wx.StaticText( self, ID, "list of\nparams to\nbe recorded", POSITION, SIZE, STYLE )
+        self.textSelectParams = wx.StaticText( self, ID, "None Selected", POSITION, SIZE, STYLE )
         self.textSelectParams.Wrap( WRAP )
         gridETestInfo.Add( self.textSelectParams, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
@@ -199,7 +199,7 @@ class MainPanel(wx.Panel):
         self.labelCOMStatus.Wrap( WRAP )
         gridETestInfo.Add( self.labelCOMStatus, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textCOMStatus = wx.StaticText( self, ID, "<get Status>", POSITION, SIZE, STYLE )
+        self.textCOMStatus = wx.StaticText( self, ID, "No Status", POSITION, SIZE, STYLE )
         self.textCOMStatus.Wrap( WRAP )
         gridETestInfo.Add( self.textCOMStatus, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
@@ -207,7 +207,7 @@ class MainPanel(wx.Panel):
         self.labelSelectFileName.Wrap( WRAP )
         gridETestInfo.Add( self.labelSelectFileName, PROPORTION0, wx.ALL|wx.ALIGN_RIGHT, BORDER )
 
-        self.textSelectFileName = wx.StaticText( self, ID, "<get Name>", POSITION, SIZE, STYLE )
+        self.textSelectFileName = wx.StaticText( self, ID, "<enter default>", POSITION, SIZE, STYLE )
         self.textSelectFileName.Wrap( WRAP )
         gridETestInfo.Add( self.textSelectFileName, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, BORDER )
 
@@ -225,36 +225,36 @@ class MainPanel(wx.Panel):
         #   MIDDLE INFO
         #######################################################################
 
-        boxCInfo = wx.BoxSizer( wx.VERTICAL )
+        # boxCInfo = wx.BoxSizer( wx.VERTICAL )
 
-        boxCInfo.SetMinSize( (200,-1) )
-        boxDGeneralInfo = wx.BoxSizer( wx.VERTICAL )
+        # boxCInfo.SetMinSize( (200,-1) )
+        # boxDGeneralInfo = wx.BoxSizer( wx.VERTICAL )
 
-        self.titleGeneralInfo = wx.StaticText( self, ID, "General Infomation", POSITION, SIZE, STYLE )
-        self.titleGeneralInfo.Wrap( WRAP )
-        boxDGeneralInfo.Add( self.titleGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        # self.titleGeneralInfo = wx.StaticText( self, ID, "General Infomation", POSITION, SIZE, STYLE )
+        # self.titleGeneralInfo.Wrap( WRAP )
+        # boxDGeneralInfo.Add( self.titleGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.divider4 = wx.StaticLine( self, ID, POSITION, SIZE, wx.LI_HORIZONTAL )
-        boxDGeneralInfo.Add( self.divider4, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
+        # self.divider4 = wx.StaticLine( self, ID, POSITION, SIZE, wx.LI_HORIZONTAL )
+        # boxDGeneralInfo.Add( self.divider4, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
 
-        #######################################################################
-        # Block of text
+        # #######################################################################
+        # # Block of text
 
-        self.textGeneralInfo = wx.StaticText( self, ID, ("The entire text goes here. \nWIll be triggered by the \nclick of a text parameter \nor something. \nMay have multiple \nparagraphs. I don't know. "),
-                                             wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-        self.textGeneralInfo.Wrap( WRAP )
-        boxDGeneralInfo.Add( self.textGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        # self.textGeneralInfo = wx.StaticText( self, ID, ("The entire text goes here. \nWIll be triggered by the \nclick of a text parameter \nor something. \nMay have multiple \nparagraphs. I don't know. "),
+        #                                      wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        # self.textGeneralInfo.Wrap( WRAP )
+        # boxDGeneralInfo.Add( self.textGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        #######################################################################
-        # Module Listing
+        # #######################################################################
+        # # Module Listing
 
-        self.textModuleA = wx.StaticText( self, ID, "Module A", POSITION, SIZE, STYLE )
-        self.textModuleA.Wrap( WRAP )
-        boxDGeneralInfo.Add( self.textModuleA, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+        # self.textModuleA = wx.StaticText( self, ID, "Module A", POSITION, SIZE, STYLE )
+        # self.textModuleA.Wrap( WRAP )
+        # boxDGeneralInfo.Add( self.textModuleA, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        boxCInfo.Add( boxDGeneralInfo, PROPORTION0, wx.EXPAND, BORDER )
+        # boxCInfo.Add( boxDGeneralInfo, PROPORTION0, wx.EXPAND, BORDER )
 
-        boxBTop.Add( boxCInfo, PROPORTION0, wx.EXPAND, BORDER )
+        # boxBTop.Add( boxCInfo, PROPORTION0, wx.EXPAND, BORDER )
 
         #######################################################################
         # / MIDDLE INFO
@@ -267,23 +267,47 @@ class MainPanel(wx.Panel):
         self.pageCPlot = wx.Notebook( self, ID, POSITION, SIZE, STYLE )
         self.pageCPlot.SetMinSize( ( 800,-1 ) )
 
+        # #######################################################################
+        # Main Home Tab
+
         self.tab1 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
-        self.bSizer30 = wx.BoxSizer( wx.VERTICAL )
+        self.boxDTab1 = wx.BoxSizer( wx.VERTICAL )
 
-        self.m_bpButton3 = wx.BitmapButton( self.tab1, ID, wx.Bitmap( "graph1.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, wx.BU_AUTODRAW )
-        self.bSizer30.Add( self.m_bpButton3, PROPORTION0, wx.ALL, BORDER )
+        self.bitmapUQR = wx.StaticBitmap( self.tab1, ID, wx.Bitmap( "uqr_logo.bmp", wx.BITMAP_TYPE_ANY ), POSITION, SIZE, STYLE )
+        self.boxDTab1.Add( self.bitmapUQR, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
-        self.statixPlaceholder = wx.StaticText( self.tab1, ID, "the plot goes here", POSITION, SIZE, STYLE )
-        self.statixPlaceholder.Wrap( WRAP )
-        self.bSizer30.Add( self.statixPlaceholder, PROPORTION0, wx.ALL, BORDER )
+        self.staticPlaceholder = wx.StaticText( self.tab1, ID, "the plot goes here", POSITION, SIZE, STYLE )
+        self.staticPlaceholder.Wrap( WRAP )
+        self.boxDTab1.Add( self.staticPlaceholder, PROPORTION0, wx.ALL, BORDER )
 
-
-        self.tab1.SetSizer( self.bSizer30 )
+        self.tab1.SetSizer( self.boxDTab1 )
         self.tab1.Layout()
-        self.bSizer30.Fit( self.tab1 )
-        self.pageCPlot.AddPage( self.tab1, u"Main Tab", False )
-        self.m_panel2 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
-        self.pageCPlot.AddPage( self.m_panel2, u"Tab 2", True )
+        self.boxDTab1.Fit( self.tab1 )
+        self.pageCPlot.AddPage( self.tab1, u"Home Tab", False )
+
+        # #######################################################################
+        # Schedule Information Tab
+
+        self.tab2 = wx.Panel( self.pageCPlot, ID, POSITION, SIZE, wx.TAB_TRAVERSAL )
+        self.boxDTab2 = wx.BoxSizer( wx.VERTICAL )
+
+        self.titleGeneralInfo = wx.StaticText( self.tab2, ID, "Test Schedule Infomation", POSITION, SIZE, STYLE )
+        self.titleGeneralInfo.Wrap( WRAP )
+        self.boxDTab2.Add( self.titleGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+
+        self.divider4 = wx.StaticLine( self.tab2, ID, POSITION, SIZE, wx.LI_HORIZONTAL )
+        self.boxDTab2.Add( self.divider4, PROPORTION0, wx.EXPAND |wx.ALL, BORDER )
+
+
+        self.textGeneralInfo = wx.StaticText( self.tab2, ID, ("The entire text goes here. \nWIll be triggered by the \nclick of a text parameter \nor something. \nMay have multiple \nparagraphs. I don't know. "),
+                                              wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+        self.textGeneralInfo.Wrap( WRAP )
+        self.boxDTab2.Add( self.textGeneralInfo, PROPORTION0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, BORDER )
+
+        self.tab2.SetSizer( self.boxDTab2 )
+        self.tab2.Layout()
+        self.boxDTab2.Fit( self.tab2 )
+        self.pageCPlot.AddPage( self.tab2, u"Tab 2", True )
 
         boxBTop.Add( self.pageCPlot, PROPORTION1, wx.EXPAND |wx.ALL, BORDER )
 
@@ -339,7 +363,7 @@ class MainPanel(wx.Panel):
         self.labelCurrentModule.Wrap( WRAP )
         boxDCurrentModule.Add( self.labelCurrentModule, PROPORTION0, FLAG, BORDER )
 
-        self.testCurrentModule = wx.StaticText( self, ID, "<current module>", POSITION, SIZE, STYLE )
+        self.testCurrentModule = wx.StaticText( self, ID, "No Module Selected", POSITION, SIZE, STYLE )
         self.testCurrentModule.Wrap( WRAP )
         boxDCurrentModule.Add( self.testCurrentModule, PROPORTION0, FLAG, BORDER )
 
@@ -354,9 +378,9 @@ class MainPanel(wx.Panel):
         self.labelCurrentTime.Wrap( WRAP )
         boxDCurrentTime.Add( self.labelCurrentTime, PROPORTION0, FLAG, BORDER )
 
-        self.testCurrentModule1 = wx.StaticText( self, ID, "<start time - current time>", POSITION, SIZE, STYLE )
-        self.testCurrentModule1.Wrap( WRAP )
-        boxDCurrentTime.Add( self.testCurrentModule1, PROPORTION0, FLAG, BORDER )
+        self.testCurrentTime = wx.StaticText( self, ID, "No test running", POSITION, SIZE, STYLE )
+        self.testCurrentTime.Wrap( WRAP )
+        boxDCurrentTime.Add( self.testCurrentTime, PROPORTION0, FLAG, BORDER )
 
         boxCProgress.Add( boxDCurrentTime, PROPORTION0, wx.ALIGN_CENTER_HORIZONTAL, BORDER )
 
@@ -366,8 +390,6 @@ class MainPanel(wx.Panel):
         self.progressGauge = wx.Gauge( self, ID, self.gaugeRange, POSITION, SIZE, wx.GA_HORIZONTAL )
         self.progressGauge.SetValue( 0 )
         boxCProgress.Add( self.progressGauge, PROPORTION0, wx.ALL|wx.EXPAND, BORDER )
-
-        #######################################################################
 
         boxCTestStatus.Add( boxCProgress, PROPORTION1, wx.EXPAND, BORDER )
 
@@ -388,6 +410,12 @@ class MainPanel(wx.Panel):
         self.textSelectParams.SetLabel( str(model.testParams) )
         self.textCOMStatus.SetLabel( model.COMPort )
         self.textSelectFileName.SetLabel( model.fileName )
+
+        self.testCurrentModule.SetLabel( model.testSchedule )
+
+    def updateConditions(self, time):
+        self.progressGauge.SetValue( time )
+        self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
 
     def addTestScheduleHandler(self, handler):
         self.choiceSchedule.Bind( wx.EVT_CHOICE, handler )
