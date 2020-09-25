@@ -7,6 +7,7 @@ Created on Sun Sep  6 17:47:15 2020
 import wx
 from mainFrame import MainFrame
 from mainPanel import MainPanel
+from dialogs import SerialDialog
 
 from model import Model
 from arduino import Arduino
@@ -21,7 +22,7 @@ class Controller():
         """
         For event handling for all frames and panels.
         """
-        WINDOW_SIZE = (1800, 1000)
+        WINDOW_SIZE = (1500, 800)
         WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
 
 
@@ -85,6 +86,12 @@ class Controller():
     def closeProgram(self, event):
         print("Close Program")
         self.mainFrame.Close()
+
+    def showDialog(self, message): 
+        new_Dialog = SerialDialog(self.mainFrame)
+        new_Dialog.setDialogMessage(message)
+        new_Dialog.ShowModal()
+        
 
     def setTestSchedule( self, event ):
         try:
@@ -174,7 +181,13 @@ class Controller():
         """
         # open serial port
         newArduino = Arduino()
-        ser = newArduino.ser
+        try: 
+            ser = newArduino.ser
+        except AttributeError: 
+            message = "No device detected in serial port.\nTry again or check your connections."
+            self.showDialog(message)
+            print(message)
+            return 
 
         # add plot to GUI
         self.model.createCanvas(self.mainPanel.tab1)

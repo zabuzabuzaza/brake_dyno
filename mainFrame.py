@@ -9,7 +9,7 @@ import wx.xrc
 
 
 class MainFrame(wx.Frame):
-    def __init__(self, parent, title, winSize=( 1200,1000 )):
+    def __init__(self, parent, title, winSize=( 800,800 )):
         """
         Initialises the main GUI frame for all user interation and event
         handling.

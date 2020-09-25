@@ -20,9 +20,10 @@ class Arduino():
         try:
             self.ser = serial.Serial(port)
             self.ser.flushInput()
-        except serial.SerialException:
-            print("Trying to open serial port again")
-            self.ser = serial.Serial(port)
-            self.ser.flushInput()
+        except serial.SerialException as e:
+            pass
+            # print("No device detected in Serial Port")
+            # self.ser = serial.Serial(port)
+            # self.ser.flushInput()
 
 
