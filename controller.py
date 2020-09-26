@@ -147,26 +147,6 @@ class Controller():
         self.model.fileName = "data.csv"
         self.mainPanel.updateSettings(self.model)
 
-    # def startTest2(self, event):
-    #     # open serial port
-    #     newArduino = Arduino()
-    #     ser = newArduino.ser
-
-    #     newSchedule = TestSchedules()
-
-    #     # add plot to GUI
-    #     self.model.createCanvas(self.mainPanel.tab1)
-
-    #     while not newSchedule.testEnd:
-    #         if newSchedule.next:
-    #             newSchedule.scheduleJoystick()
-    #             print(newSchedule.currentModule)
-
-
-    #             newSchedule.next = True
-
-    #     print("test ended successfully")
-
     def startTest(self, event):
         """
         Opens the serial port and starts the process of:
