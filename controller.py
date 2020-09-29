@@ -170,7 +170,7 @@ class Controller():
             return 
 
         # add plot to GUI
-        self.model.createCanvas(self.mainPanel.tab1)
+        # self.model.createCanvas(self.mainPanel.tab1)
         # self.mainPanel.addToPanel(self.model.canvas)
 
         # set timer and acquisition rate
@@ -188,8 +188,8 @@ class Controller():
             # to increase system performance, only plot every few datapoints
             # maybe in the future i'll implement a variable acquisition rate
             # depending on system performance
-            if count % 2 == 0:
-                self.model.plotter(x_data, y_data, self.mainPanel.boxDTab2)
+            # if count % 2 == 0:
+            #     self.model.plotter(x_data, y_data, self.mainPanel.boxDTab2)
 
             count += 1
 
