@@ -189,7 +189,7 @@ class Controller():
             # maybe in the future i'll implement a variable acquisition rate
             # depending on system performance
             if count % 2 == 0:
-                self.model.plotter(x_data, y_data)
+                self.model.plotter(x_data, y_data, self.mainPanel.boxDTab2)
 
             count += 1
 

@@ -6,7 +6,7 @@ Created on Sun Sep  6 18:10:48 2020
 """
 
 import matplotlib
-#matplotlib.use('WXAgg')
+# matplotlib.use('WXAgg')
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
@@ -47,11 +47,11 @@ class Model():
         except ValueError:
             self.testParameters['testDuration'] = 0
 
-    def applyTestSettings(self, event):
-        self.testDuration = self.testParameters['testDuration']
+    # def applyTestSettings(self, event):
+    #     self.testDuration = self.testParameters['testDuration']
 
-    def cancelTestSettings(self, event):
-        self.testParameters['testDuration'] = self.DEFAULT_TEST_DURATION
+    # def cancelTestSettings(self, event):
+    #     self.testParameters['testDuration'] = self.DEFAULT_TEST_DURATION
 
     def getSerialData(self, serial, count):
         """
@@ -100,7 +100,7 @@ class Model():
 
         #self.canvas = FigureCanvas(panel, -1, self.fig)
 
-    def plotter(self, x_new, y_new):
+    def plotter(self, x_new, y_new, frame):
         self.y_var = np.append(self.y_var, y_new)
         self.y_var = self.y_var[1:(self.PLOT_WINDOW + 1)]
 
