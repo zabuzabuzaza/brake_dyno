@@ -38,7 +38,13 @@ class MainPanel(wx.Panel):
         PROP1 = 1 # Proportion = 1
 
         # Other Constants
-        self.scheduleList = ["Joystick", "Schedule A", "Schedule B", "Schedule C", EMPTY]
+        self.scheduleList = [
+            "Joystick", 
+            "Schedule A", 
+            "Schedule B", 
+            "Schedule C", 
+            EMPTY, 
+        ]
         self.gaugeRange = 100
 
         boxA = wx.BoxSizer( wx.VERTICAL )
@@ -114,7 +120,7 @@ class MainPanel(wx.Panel):
         # Choose Serial Port to read / write
 
         self.labelCOMPort = wx.StaticText( self, label="COM Port", style=RIGHT )
-        self.entryCOMPort = wx.TextCtrl( self, value="COM3", style=wx.TE_PROCESS_ENTER|wx.TE_RIGHT )
+        self.entryCOMPort = wx.TextCtrl( self, style=wx.TE_PROCESS_ENTER|wx.TE_RIGHT )
 
         #######################################################################
         # Enter custom csv filename
@@ -178,8 +184,12 @@ class MainPanel(wx.Panel):
         self.textSelectTest = wx.StaticText( self, label="No Test\nSelected")
         self.labelSelectParams = wx.StaticText( self, label="Parameters\nto be\nrecorded", style=RIGHT )
         self.textSelectParams = wx.StaticText( self, label="None Selected")
-        self.labelCOMStatus = wx.StaticText( self, label="COM Port\nStatus", style=RIGHT )
+        self.labelCOMName = wx.StaticText( self, label="COM Port", style=RIGHT )
+        self.textCOMName = wx.StaticText( self, label="No Name")
+
+        self.labelCOMStatus = wx.StaticText( self, label="COM Status", style=RIGHT )
         self.textCOMStatus = wx.StaticText( self, label="No Status")
+
         self.labelSelectFileName = wx.StaticText( self, label="File will be\nsaved as", style=RIGHT )
         self.textSelectFileName = wx.StaticText( self, label="<enter default>")
 
@@ -187,6 +197,8 @@ class MainPanel(wx.Panel):
         gridETestInfo.Add( self.textSelectTest, PROP0, wx.ALL, BORDER )
         gridETestInfo.Add( self.labelSelectParams, PROP0, wx.ALL|RIGHT, BORDER )
         gridETestInfo.Add( self.textSelectParams, PROP0, wx.ALL|CEN_V, BORDER )
+        gridETestInfo.Add( self.labelCOMName, PROP0, wx.ALL|RIGHT, BORDER )
+        gridETestInfo.Add( self.textCOMName, PROP0, wx.ALL|CEN_V, BORDER )
         gridETestInfo.Add( self.labelCOMStatus, PROP0, wx.ALL|RIGHT, BORDER )
         gridETestInfo.Add( self.textCOMStatus, PROP0, wx.ALL|CEN_V, BORDER )
         gridETestInfo.Add( self.labelSelectFileName, PROP0, wx.ALL|RIGHT, BORDER )
@@ -397,15 +409,16 @@ class MainPanel(wx.Panel):
         model : Model object
             object that stores the settings
         """
-        self.textSelectTest.SetLabel( model.testSchedule )
-        self.textSelectParams.SetLabel( str(model.testParams) )
-        self.textCOMStatus.SetLabel( model.COMPort )
-        self.textSelectFileName.SetLabel( model.fileName )
+        self.textSelectTest.SetLabel( model.testParameters['testSchedule'] )
+        self.textSelectParams.SetLabel( str(model.testParameters['testParams']) )
+        self.textCOMName.SetLabel( model.testParameters['COMPort'] )
+        self.textCOMStatus.SetLabel( str(model.testParameters['COMStatus']) )
+        self.textSelectFileName.SetLabel( model.testParameters['fileName'] )
 
-        self.testCurrentModule.SetLabel( model.testSchedule )
+        self.testCurrentModule.SetLabel( model.testParameters['testSchedule'] )
         self.updateScheduleInfo(model)
 
-    def updateConditions(self, time):
+    def updateConditions(self, time, stopped=False):
         """Updates the label and gauge that shows test progress. 
 
         Parameters
@@ -414,7 +427,10 @@ class MainPanel(wx.Panel):
             current time since test started
         """
         self.progressGauge.SetValue( time )
-        self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
+        if stopped: 
+            self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds" )
+        else: 
+            self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
 
     def updateScheduleInfo(self, model):
         """Updates the infomation on the schedule info tab. 
@@ -424,17 +440,18 @@ class MainPanel(wx.Panel):
         model : Model object
             stores the currently selected schedule
         """
-        if model.testSchedule == self.scheduleList[0]:
+        schedule = model.testParameters['testSchedule']
+        if schedule == self.scheduleList[0]:
             textBlock = ("A testing schedule with a joystick as an analog input.\n"
                          "The test lasts 20 seconds or until the stop button\n"
                          "is pressed.")
-        elif model.testSchedule == self.scheduleList[1]:
+        elif schedule == self.scheduleList[1]:
             textBlock = ("The proposed Schedule A for the testign for brake squeal.\n"
                          "I've no clue how in implement this yet. ")
-        elif model.testSchedule == self.scheduleList[2]:
+        elif schedule == self.scheduleList[2]:
             textBlock = ("The proposed Schedule B for the testign for brake squeal.\n"
                          "I've no clue how in implement this yet. ")
-        elif model.testSchedule == self.scheduleList[3]:
+        elif schedule == self.scheduleList[3]:
             textBlock = ("The proposed Schedule C for the testign for brake squeal.\n"
                          "I've no clue how in implement this yet. ")
         else:

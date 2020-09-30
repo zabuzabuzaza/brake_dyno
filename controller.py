@@ -10,11 +10,13 @@ from mainPanel import MainPanel
 from dialogs import SerialDialog
 
 from model import Model
-from arduino import Arduino
+# from arduino import Arduino
 from schedules import TestSchedules
 import util
+from util import Arduino
 
 import time
+import threading
 
 
 class Controller():
@@ -24,7 +26,7 @@ class Controller():
         """
         WINDOW_SIZE = (1500, 800)
         WINDOW_TITLE = "braaaaakkkkkee ddyyynnnnnooo"
-
+        self.TEST_CONTINUE = True
 
         self.model = Model()
 
@@ -38,11 +40,11 @@ class Controller():
         self.mainFrame.Layout()
         self.statusBar = self.mainFrame.CreateStatusBar( 1 )
 
-
         self.addMainFrameEventHandlers()
         self.addMainPanelEventHandlers()
 
-        self.mainPanel.updateSettings(self.model)
+        self.defaultSettings(None)
+        # self.mainPanel.updateSettings(self.model)
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addCloseProgramHandler(self.closeProgram)
@@ -91,13 +93,9 @@ class Controller():
         new_Dialog = SerialDialog(self.mainFrame)
         new_Dialog.setDialogMessage(message)
         new_Dialog.ShowModal()
-        
 
     def setTestSchedule( self, event ):
-        try:
-            self.model.testParameters['testSchedule'] = event.GetString()
-        except (ValueError, KeyError):
-            self.model.testParameters['testSchedule'] = "Joystick"
+        self.model.tempParameters['testSchedule'] = event.GetString()
 
     def setXRecord( self, event ):
         print("X rec")
@@ -115,39 +113,40 @@ class Controller():
         print("motor")
 
     def setCOMPort( self, event ):
-        try:
-            self.model.testParameters['COMPort'] = event.GetString()
-        except (ValueError, KeyError):
-            self.model.testParameters['COMPort'] = "COM3"
+        self.model.tempParameters['COMPort'] = event.GetString()
+        self.model.tempParameters['COMStatus'] = self.checkCOMPort(event.GetString())
 
     def setFileName( self, event ):
-        try:
-            self.model.testParameters['fileName'] = event.GetString() + ".csv"
-        except (ValueError, KeyError):
-            self.model.testParameters['fileName'] = "data.csv"
+        self.model.tempParameters['fileName'] = event.GetString() + ".csv"
 
     def applySettings( self, event ):
-        try:
-            self.model.testSchedule = self.model.testParameters['testSchedule']
-        except (ValueError, KeyError):
-            self.model.testSchedule = "Joystick"
-        try:
-            self.model.COMPort = self.model.testParameters['COMPort']
-        except (ValueError, KeyError):
-            self.model.COMPort = "COM3"
-        try:
-            self.model.fileName = self.model.testParameters['fileName']
-        except (ValueError, KeyError):
-            self.model.fileName = "data.csv"
+        self.model.tempParameters['COMStatus'] = self.checkCOMPort(self.model.tempParameters['COMPort'])
+
+        self.model.testParameters = dict(self.model.tempParameters)
         self.mainPanel.updateSettings(self.model)
 
     def defaultSettings( self, event ):
-        self.model.testSchedule = "Joystick"
-        self.model.COMPort = "COM3"
-        self.model.fileName = "data.csv"
+        self.model.defaultParameters['COMStatus'] = self.checkCOMPort(self.model.defaultParameters['COMPort'])
+        self.model.defaultParameters['fileName'] = util.getDate() + ".csv"
+        
+        self.model.testParameters = dict(self.model.defaultParameters)
         self.mainPanel.updateSettings(self.model)
 
+    def checkCOMPort(self, port_Name): 
+        newArduino = Arduino(port_Name)
+        try: 
+            ser = newArduino.ser
+            return True
+        except AttributeError: 
+            return False
+
     def startTest(self, event):
+        t = threading.Thread(target=self.data_aq) 
+
+        t.start()
+
+
+    def data_aq(self): 
         """
         Opens the serial port and starts the process of:
             - reading the serial port
@@ -160,14 +159,14 @@ class Controller():
             A reference to the action that triggered this function.
         """
         # open serial port
-        newArduino = Arduino()
-        try: 
-            ser = newArduino.ser
-        except AttributeError: 
-            message = "No device detected in serial port.\nTry again or check your connections."
+        if not self.checkCOMPort(self.model.testParameters['COMPort']): 
+            message = """No device detected in serial port.\n
+                    Try again or check your connections."""
             self.showDialog(message)
-            print(message)
-            return 
+            return
+        
+        newArduino = Arduino(self.model.testParameters['COMPort'])
+        ser = newArduino.ser
 
         # add plot to GUI
         # self.model.createCanvas(self.mainPanel.tab1)
@@ -176,9 +175,10 @@ class Controller():
         # set timer and acquisition rate
         count = 0
         start_time = time.time()
+        self.TEST_CONTINUE = True
         self.mainPanel.progressGauge.SetRange(self.model.testDuration)
 
-        while (time.time() - start_time) < self.model.testDuration:
+        while (time.time() - start_time) < self.model.testDuration and self.TEST_CONTINUE:
             # reads and stores serial data
             x_data, y_data = self.model.getSerialData(ser, (time.time() - start_time))
 
@@ -193,14 +193,20 @@ class Controller():
 
             count += 1
 
-        self.mainPanel.updateConditions(self.model.testDuration)
+        if self.TEST_CONTINUE: 
+            self.mainPanel.updateConditions(self.model.testDuration)
+        else: 
+            self.mainPanel.updateConditions(time.time() - start_time, stopped=True)
         # completes GUI updates
+        
         # saves data to csv file & closes serial port safely
-        util.data2csv(self.model.dataSet)
+        util.data2csv(self.model.dataSet, self.model.testParameters['fileName'])
         ser.close()
 
     def stopTest( self, event ):
-        print("stop")
+        self.TEST_CONTINUE = False
+
+        
 
 
 

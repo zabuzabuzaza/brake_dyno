@@ -11,27 +11,49 @@ Created on Sun Sep  6 18:10:48 2020
 # import matplotlib.pyplot as plt
 # import numpy as np
 
+import util
+
 class Model():
     def __init__(self):
         """
         For keeping track of all information of the GUI.
         """
+        # constants
         self.DEFAULT_TEST_DURATION = 20
         self.PLOT_WINDOW = 40
+
+        self.DEFAULT_SCHEDULE = "Joystick"
+        self.DEFAULT_PARAMS = ["X-Stick", "Y-Stick"]
+        self.DEFAULT_COM_NAME = "COM3"
+        self.DEFAULT_COM_STATUS = "Click Apply to check Status" 
+        self.DEFAULT_FILE_NAME = util.getDate() + ".csv"
 
         self.testDuration = self.DEFAULT_TEST_DURATION
         self.dataSet = [["Seconds", "X_Data", "Y Data"]]
 
-        self.testSchedule = "Joystick"
-        self.testParams = ["X-Stick", "Y-Stick"]
-        self.COMPort = "COM3"
-        self.fileName = "data.csv"
+        # self.testSchedule = self.DEFAULT_SCHEDULE
+        # self.testParams = self.DEFAULT_PARAMS
+        # self.COMName = self.DEFAULT_COM_NAME
+        # self.COMStatus = self.DEFAULT_COM_STATUS
+        # self.fileName = self.DEFAULT_FILE_NAME
+
+        # default settings 
+        self.defaultParameters = {
+            'testSchedule': self.DEFAULT_SCHEDULE, 
+            'testParams': self.DEFAULT_PARAMS, 
+            'COMPort': self.DEFAULT_COM_NAME, 
+            'COMStatus': self.DEFAULT_COM_STATUS, 
+            'fileName': self.DEFAULT_FILE_NAME, 
+        }
+
+        # stores settings 
+        self.testParameters = dict(self.defaultParameters)
 
         # temporarily stores settings that will either be applied or cancelled
-        self.testParameters = {}
+        self.tempParameters = dict(self.testParameters)
 
-        self.variables = {"testLength": 10}
-        self.interactables = {}
+        # self.variables = {"testLength": 10}
+        # self.interactables = {}
 
     def getTestDuration(self, event):
         """
@@ -43,15 +65,16 @@ class Model():
             The textEntry object from which to get the entered text.
         """
         try:
-            self.testParameters['testDuration'] = int(event.GetEventObject().GetLineText(0))
+            self.tempParameters['testDuration'] = int(event.GetEventObject().GetLineText(0))
         except ValueError:
-            self.testParameters['testDuration'] = 0
+            self.tempParameters['testDuration'] = 0
+    
 
     # def applyTestSettings(self, event):
-    #     self.testDuration = self.testParameters['testDuration']
+    #     self.testDuration = self.tempParameters['testDuration']
 
     # def cancelTestSettings(self, event):
-    #     self.testParameters['testDuration'] = self.DEFAULT_TEST_DURATION
+    #     self.tempParameters['testDuration'] = self.DEFAULT_TEST_DURATION
 
     def getSerialData(self, serial, count):
         """
@@ -120,7 +143,7 @@ class Model():
 
 
     def debugTestSettings(self):
-        print(f"Temporary Duration: {self.testParameters['testDuration']}")
+        print(f"Temporary Duration: {self.tempParameters['testDuration']}")
         print(f"Actual Duration: {self.testDuration}")
 
 

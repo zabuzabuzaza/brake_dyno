@@ -30,7 +30,7 @@ class MainFrame(wx.Frame):
 
         self.menubar = wx.MenuBar( 0 )
         self.menu1 = wx.Menu()
-        self.menuExit = wx.MenuItem( self.menu1, ID, u"Exit", EMPTYNAME, ITEMTYPE )
+        self.menuExit = wx.MenuItem( self.menu1, ID, "Exit", EMPTYNAME, ITEMTYPE )
         self.menu1.Append( self.menuExit )
 
         self.menubar.Append( self.menu1, u"File" )
