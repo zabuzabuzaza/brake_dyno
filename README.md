@@ -1,20 +1,20 @@
 Drake Dyno Software for Data Acquisition
 =========================
 
-A python program <del>that's compiled into an .exe (with pyinstaller)</del> to run with a Arduino Uno. Used to be compilable to an .exe but pyinstaller doesn't work with matplotlib. For now, you'll need to run the .py file. 
+A python program that's compiled into an .exe (with pyinstaller) to run with a Arduino Uno. <del>Used to be compilable to an .exe but pyinstaller doesn't work with matplotlib. For now, you'll need to run the .py file. <\del> Plotting is back on baybey. I'll update the gif later. 
 
 ![Example](images/guitest.gif)
 
 Usage
 ========
 
-Works with a "COM3" port.
+Default is COM3, but you can input whatever port and it'll check it. 
 Requires the following packages 
 - pyserial 
 - wxPython
-- matplotlib
+- numpy (although I might get rid of this dependancy to reduce file size)
 
-<del>The executable is in the 'dist' folder.</del>
+I can't upload the executable to Github since it's too big, so it's in MECH4552\Documents\7. Project sections\3. Data Acq\brake_dyno\dist
 
 Notes
 =========
@@ -27,9 +27,8 @@ in the directory of main.py
 Done 
 ====================
 - Recording functionality with GUI and a button is done and works alright
-- live plot in a separate window
+- live plot in the same window 
 
 To Do
 ======
-- add some test runs for analog/digital output
-- figure out a basic PID implementation 
+- create multiple plots for the selected parameters
