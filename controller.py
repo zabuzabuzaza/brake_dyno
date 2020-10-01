@@ -56,15 +56,13 @@ class Controller():
 
     def addMainPanelEventHandlers(self):
         self.mainPanel.addTestScheduleHandler(self.setTestSchedule)
-        self.mainPanel.addXRecordHandler(self.setXRecord)
-        self.mainPanel.addYRecordHandler(self.setYRecord)
-        self.mainPanel.addRotorTRecordHandler(self.setRotorTRecord)
-        self.mainPanel.addCalipTRecordHandler(self.setCalipTRecord)
-        self.mainPanel.addMotorRecordHandler(self.setMotorRecord)
+        self.mainPanel.addParamRecordHandler(self.setParamRecord)
         self.mainPanel.addCOMPortHandler(self.setCOMPort)
         self.mainPanel.addFileNameHandler(self.setFileName)
+
         self.mainPanel.addApplySettingsHandler(self.applySettings)
         self.mainPanel.addDefaultSettingsHandler(self.defaultSettings)
+
         self.mainPanel.addStartTestHandler(self.startTest)
         self.mainPanel.addStopTestHander(self.stopTest)
 
@@ -97,20 +95,20 @@ class Controller():
     def setTestSchedule( self, event ):
         self.model.tempParameters['testSchedule'] = event.GetString()
 
-    def setXRecord( self, event ):
-        print("X rec")
+    def setParamRecord( self, event ):  
+        try: 
+            param = self.model.ALL_PARAMETERS[event.GetId() - 1]
+        except IndexError: 
+            param = ""
 
-    def setYRecord( self, event ):
-        print("y rec")
+        if event.GetInt(): 
+            if param not in self.model.tempParameters['testParams']: 
+                self.model.tempParameters['testParams'].append(param)
+        else: 
+            self.model.tempParameters['testParams'].remove(param)
 
-    def setRotorTRecord( self, event ):
-        print("rotor")
-
-    def setCalipTRecord( self, event ):
-        print("calip")
-
-    def setMotorRecord( self, event ):
-        print("motor")
+        # keep for debugging
+        print(self.model.tempParameters['testParams'])
 
     def setCOMPort( self, event ):
         self.model.tempParameters['COMPort'] = event.GetString()
@@ -120,12 +118,16 @@ class Controller():
         self.model.tempParameters['fileName'] = event.GetString() + ".csv"
 
     def applySettings( self, event ):
+        # check COM status and update time
         self.model.tempParameters['COMStatus'] = self.checkCOMPort(self.model.tempParameters['COMPort'])
+        if self.model.tempParameters['fileName'] == self.model.testParameters['fileName']: 
+            self.model.tempParameters['fileName'] = util.getDate() + ".csv"
 
         self.model.testParameters = dict(self.model.tempParameters)
         self.mainPanel.updateSettings(self.model)
 
     def defaultSettings( self, event ):
+        # check COM status and update time
         self.model.defaultParameters['COMStatus'] = self.checkCOMPort(self.model.defaultParameters['COMPort'])
         self.model.defaultParameters['fileName'] = util.getDate() + ".csv"
         
@@ -142,7 +144,6 @@ class Controller():
 
     def startTest(self, event):
         t = threading.Thread(target=self.data_aq) 
-
         t.start()
 
 
@@ -170,10 +171,9 @@ class Controller():
 
         # add plot to GUI
         # self.model.createCanvas(self.mainPanel.tab1)
-        # self.mainPanel.addToPanel(self.model.canvas)
+        self.mainPanel.drawPlot(self.model.createCanvas())
 
         # set timer and acquisition rate
-        count = 0
         start_time = time.time()
         self.TEST_CONTINUE = True
         self.mainPanel.progressGauge.SetRange(self.model.testDuration)
@@ -184,20 +184,13 @@ class Controller():
 
             # update test conditions
             self.mainPanel.updateConditions(time.time() - start_time)
+            self.mainPanel.drawPlot(self.model.plotter((time.time() - start_time), x_data, y_data))
 
-            # to increase system performance, only plot every few datapoints
-            # maybe in the future i'll implement a variable acquisition rate
-            # depending on system performance
-            # if count % 2 == 0:
-            #     self.model.plotter(x_data, y_data, self.mainPanel.boxDTab2)
-
-            count += 1
-
+        # completes GUI updates
         if self.TEST_CONTINUE: 
             self.mainPanel.updateConditions(self.model.testDuration)
         else: 
             self.mainPanel.updateConditions(time.time() - start_time, stopped=True)
-        # completes GUI updates
         
         # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet, self.model.testParameters['fileName'])

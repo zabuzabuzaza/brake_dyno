@@ -6,7 +6,10 @@ Class for plotting
 import wx
 import wx.xrc
 import wx.adv
+import wx.lib.plot as wxplot
 from plotter import PlotExample
+
+import numpy as np
 
 class MainPanel(wx.Panel):
     def __init__(self, parent):
@@ -97,11 +100,11 @@ class MainPanel(wx.Panel):
         #######################################################################
         # Checkbox list of parameters
 
-        self.checkJoyX = wx.CheckBox( self.scrollEWinParam, label="X-Position")
-        self.checkJoyY = wx.CheckBox( self.scrollEWinParam, label="Y-Position")
-        self.checkRotorTemp = wx.CheckBox( self.scrollEWinParam, label="Rotor Temp")
-        self.checkCalipTemp = wx.CheckBox( self.scrollEWinParam, label="Caliper Temp")
-        self.checkMotorSpeed = wx.CheckBox( self.scrollEWinParam, label="Motor Speed")
+        self.checkJoyX = wx.CheckBox( self.scrollEWinParam, id=1, label="X-Position")
+        self.checkJoyY = wx.CheckBox( self.scrollEWinParam, id=2, label="Y-Position")
+        self.checkRotorTemp = wx.CheckBox( self.scrollEWinParam, id=3, label="Rotor Temp")
+        self.checkCalipTemp = wx.CheckBox( self.scrollEWinParam, id=4, label="Caliper Temp")
+        self.checkMotorSpeed = wx.CheckBox( self.scrollEWinParam, id=5, label="Motor Speed")
         
         self.checkJoyX.SetValue(True)
         self.checkJoyY.SetValue(True)
@@ -215,45 +218,6 @@ class MainPanel(wx.Panel):
         #######################################################################
 
         #######################################################################
-        #   MIDDLE INFO
-        #######################################################################
-
-        # boxCInfo = wx.BoxSizer( wx.VERTICAL )
-
-        # boxCInfo.SetMinSize( (200,-1) )
-        # boxDGeneralInfo = wx.BoxSizer( wx.VERTICAL )
-
-        # self.titleGeneralInfo = wx.StaticText( self, label="General Infomation")
-        # self.titleGeneralInfo.Wrap( WRAP )
-        # boxDGeneralInfo.Add( self.titleGeneralInfo, PROP0, wx.ALL|CEN_H, BORDER )
-
-        # self.divider4 = wx.StaticLine( self, label=style=wx.LI_HORIZONTAL )
-        # boxDGeneralInfo.Add( self.divider4, PROP0, EXP |wx.ALL, BORDER )
-
-        # #######################################################################
-        # # Block of text
-
-        # self.textGeneralInfo = wx.StaticText( self, label=("The entire text goes here. \nWIll be triggered by the \nclick of a text parameter \nor something. \nMay have multiple \nparagraphs. I don't know. "),
-        #                                      wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-        # self.textGeneralInfo.Wrap( WRAP )
-        # boxDGeneralInfo.Add( self.textGeneralInfo, PROP0, wx.ALL|CEN_H, BORDER )
-
-        # #######################################################################
-        # # Module Listing
-
-        # self.textModuleA = wx.StaticText( self, label="Module A")
-        # self.textModuleA.Wrap( WRAP )
-        # boxDGeneralInfo.Add( self.textModuleA, PROP0, wx.ALL|CEN_H, BORDER )
-
-        # boxCInfo.Add( boxDGeneralInfo, PROP0, EXP, BORDER )
-
-        # boxBTop.Add( boxCInfo, PROP0, EXP, BORDER )
-
-        #######################################################################
-        # / MIDDLE INFO
-        #######################################################################
-
-        #######################################################################
         #   RIGHT TABS
         #######################################################################
 
@@ -301,15 +265,16 @@ class MainPanel(wx.Panel):
         self.boxDTab2.Fit( self.tab2 )
         self.pageCPlot.AddPage( self.tab2, "Schedule Information", False )
 
-        # boxBTop.Add( self.pageCPlot, PROP1, EXP |wx.ALL, BORDER )
+        # #######################################################################
+        # Plot Tab
+        self.tab3 = wxplot.PlotCanvas(self.pageCPlot)
 
-        # # Plotter 
-        # self.tab3 = PlotExample(self.pageCPlot)
+        # self.tab3.Draw(self.draw1Objects())
 
         # #self.tab3.SetSizer( self.boxDTab2 )
         # self.tab3.Layout()
         # self.boxDTab2.Fit( self.tab3 )
-        # self.pageCPlot.AddPage( self.tab3, "Schedule Information", True )
+        self.pageCPlot.AddPage( self.tab3, "Plot", True )
 
         boxBTop.Add( self.pageCPlot, PROP1, EXP |wx.ALL, BORDER )
 
@@ -462,20 +427,12 @@ class MainPanel(wx.Panel):
     def addTestScheduleHandler(self, handler):
         self.choiceSchedule.Bind( wx.EVT_CHOICE, handler )
 
-    def addXRecordHandler(self, handler):
+    def addParamRecordHandler(self, handler):
         self.checkJoyX.Bind( wx.EVT_CHECKBOX, handler )
-
-    def addYRecordHandler(self, handler):
         self.checkJoyY.Bind( wx.EVT_CHECKBOX, handler )
-
-    def addRotorTRecordHandler(self, handler):
         self.checkRotorTemp.Bind( wx.EVT_CHECKBOX, handler )
-
-    def addCalipTRecordHandler(self, handler):
         self.checkCalipTemp.Bind( wx.EVT_CHECKBOX, handler )
-
-    def addMotorRecordHandler(self, handler):
-        self.checkMotorSpeed.Bind( wx.EVT_CHECKBOX, handler )
+        self.checkMotorSpeed.Bind( wx.EVT_CHECKBOX, handler )        
 
     def addCOMPortHandler(self, handler):
         self.entryCOMPort.Bind( wx.EVT_TEXT, handler )
@@ -500,6 +457,11 @@ class MainPanel(wx.Panel):
     def addToPanel(self, canvas):
         self.bSizer30.Add(canvas)
         self.Fit()
+
+    def drawPlot(self, plotGraphics): 
+        self.tab3.Draw(plotGraphics)
+
+    
 
 
 

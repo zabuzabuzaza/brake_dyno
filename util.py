@@ -31,7 +31,7 @@ class Arduino():
             # self.ser.flushInput()
 
 def getDate(): 
-    return str(datetime.now().strftime("%m-%d-%H-%M-%S"))
+    return str(datetime.now().strftime("%b %d %H-%M"))
 
 def data2csv(data_list, filename='data.csv'):
     """
