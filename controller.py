@@ -5,19 +5,16 @@ Created on Sun Sep  6 17:47:15 2020
 @author: iamde
 """
 import wx
-from mainFrame import MainFrame
-from mainPanel import MainPanel
-from dialogs import SerialDialog
+from frames import MainFrame, SerialDialog
+from panel import MainPanel
 
 from model import Model
-# from arduino import Arduino
 from schedules import TestSchedules
 import util
 from util import Arduino
 
 import time
 import threading
-
 
 class Controller():
     def __init__(self):
@@ -29,6 +26,7 @@ class Controller():
         self.TEST_CONTINUE = True
 
         self.model = Model()
+        self.newSchedule = TestSchedules() 
 
         self.mainFrame = MainFrame(None, WINDOW_TITLE, WINDOW_SIZE)
 
@@ -44,15 +42,11 @@ class Controller():
         self.addMainPanelEventHandlers()
 
         self.defaultSettings(None)
-        # self.mainPanel.updateSettings(self.model)
+
+        self.start_time = 0
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addCloseProgramHandler(self.closeProgram)
-        # self.mainFrame.addRecordingSettingsHandler(self.openRecordingSettings)
-        # self.mainFrame.addStartTestHandler(self.executeAcq)
-
-        # disable main frame duration setting
-        # self.mainPanel.addTextCtrlHandler(self.model.getTestDuration)
 
     def addMainPanelEventHandlers(self):
         self.mainPanel.addTestScheduleHandler(self.setTestSchedule)
@@ -65,23 +59,6 @@ class Controller():
 
         self.mainPanel.addStartTestHandler(self.startTest)
         self.mainPanel.addStopTestHander(self.stopTest)
-
-    # def addSettingsFrameEventHandlers(self, settingsFrame):
-    #     settingsFrame.addTestRunChoiceHandler(self.setTestRun)
-    #     settingsFrame.addTextCtrlHandler(self.model.getTestDuration)
-    #     settingsFrame.addCheckBoxHandler(self.setRecords)
-
-    #     settingsFrame.addApplySettingsHandler(self.applyTestSettings, settingsFrame)
-    #     settingsFrame.addCancelSettingsHandler(self.cancelTestSettings, settingsFrame)
-
-    # def openRecordingSettings(self, event):
-    #     try:
-    #         settingsFrame = SettingsFrame(None)
-    #     except wx.PyNoAppError:
-    #         print("Try running it again. ")
-    #     settingsFrame.Centre()
-    #     settingsFrame.Show()
-    #     self.addSettingsFrameEventHandlers(settingsFrame)
 
     def closeProgram(self, event):
         print("Close Program")
@@ -108,7 +85,7 @@ class Controller():
             self.model.tempParameters['testParams'].remove(param)
 
         # keep for debugging
-        print(self.model.tempParameters['testParams'])
+        # print(self.model.tempParameters['testParams'])
 
     def setCOMPort( self, event ):
         self.model.tempParameters['COMPort'] = event.GetString()
@@ -124,7 +101,12 @@ class Controller():
             self.model.tempParameters['fileName'] = util.getDate() + ".csv"
 
         self.model.testParameters = dict(self.model.tempParameters)
+        self.model.testDuration = self.newSchedule.scheduleList[self.model.testParameters['testSchedule']]
         self.mainPanel.updateSettings(self.model)
+
+        # add plot to GUI
+        for param in self.model.testParameters['testParams']: 
+            self.mainPanel.drawPlot(param, self.model.createCanvas(param))
 
     def defaultSettings( self, event ):
         # check COM status and update time
@@ -132,7 +114,13 @@ class Controller():
         self.model.defaultParameters['fileName'] = util.getDate() + ".csv"
         
         self.model.testParameters = dict(self.model.defaultParameters)
+        self.model.testDuration = self.newSchedule.scheduleList[self.model.testParameters['testSchedule']]
         self.mainPanel.updateSettings(self.model)
+
+        # add plot to GUI
+        for param in self.model.testParameters['testParams']: 
+            self.mainPanel.drawPlot(param, self.model.createCanvas(param))
+
 
     def checkCOMPort(self, port_Name): 
         newArduino = Arduino(port_Name)
@@ -143,8 +131,57 @@ class Controller():
             return False
 
     def startTest(self, event):
-        t = threading.Thread(target=self.data_aq) 
-        t.start()
+        
+        self.start_time = time.time()
+        
+        self.mainPanel.progressGauge.SetRange(self.model.testDuration)
+
+        self.TEST_CONTINUE = True
+        self.newSchedule.testEnd = False
+
+        # threads
+        t_daq = threading.Thread(target=self.data_aq) 
+        t_ser = threading.Thread(target=self.sendSerial)
+        t_daq.start()
+        t_ser.start()
+
+    def sendSerial(self): 
+        
+        # newSchedule.currentModule = self.model.testParameters['testSchedule']
+
+        # set timer and acquisition rate
+        # self.start_time = time.time()
+        
+        
+        while not self.newSchedule.testEnd: 
+            # print(self.model.latest_data[1])
+            # self.ser.write(str.encode(str(self.model.latest_data[1])))
+
+            # newSchedule.runSchedule(self.model.testParameters['testSchedule'])
+            
+            for module, length in self.newSchedule.scheduleModules[self.model.testParameters['testSchedule']]:
+                module_start = time.time()
+                self.mainPanel.moduleGauge.SetRange(length)
+                self.newSchedule.runModule(module)
+                print(f"Sleeping for time {length}")
+                time.sleep(length)
+                self.newSchedule.testEnd = True
+
+                self.mainPanel.updateModuleConditions(time.time() - module_start, module.__name__)
+
+                if not self.TEST_CONTINUE: 
+                    break
+
+            self.newSchedule.testEnd = True
+
+        
+        # completes GUI updates
+        if self.TEST_CONTINUE: 
+            self.mainPanel.updateTotalConditions(self.model.testDuration)
+        else: 
+            self.mainPanel.updateTotalConditions(time.time() - self.start_time, stopped=True)
+
+        print("Test Ended")
 
 
     def data_aq(self): 
@@ -168,36 +205,48 @@ class Controller():
         
         newArduino = Arduino(self.model.testParameters['COMPort'])
         ser = newArduino.ser
+        
+        # reset plot
+        for param in self.model.testParameters['testParams']: 
+            self.mainPanel.updatePlot(param, self.model.createCanvas(param))
 
-        # add plot to GUI
-        # self.model.createCanvas(self.mainPanel.tab1)
-        self.mainPanel.drawPlot(self.model.createCanvas())
 
-        # set timer and acquisition rate
-        start_time = time.time()
-        self.TEST_CONTINUE = True
-        self.mainPanel.progressGauge.SetRange(self.model.testDuration)
-
-        while (time.time() - start_time) < self.model.testDuration and self.TEST_CONTINUE:
+        count = 0
+        
+        while (time.time() - self.start_time) < self.model.testDuration and self.TEST_CONTINUE:
+            current = time.time() - self.start_time
+            
             # reads and stores serial data
-            x_data, y_data = self.model.getSerialData(ser, (time.time() - start_time))
-
+            _, x_data, y_data, _, _, _ = self.model.getSerialData(ser, current)
+            
             # update test conditions
-            self.mainPanel.updateConditions(time.time() - start_time)
-            self.mainPanel.drawPlot(self.model.plotter((time.time() - start_time), x_data, y_data))
+            self.mainPanel.updateTotalConditions(current)
+
+            # it's too much for the program to have 2 plots at the same time
+            # so we need to slow it down
+            if count % 2 == 0: 
+                self.mainPanel.updatePlot("X-Stick", self.model.plot1("X-Stick", current, x_data))
+                self.mainPanel.updatePlot("Y-Stick", self.model.plot1("Y-Stick", current, y_data))
+                
+            count += 1
 
         # completes GUI updates
         if self.TEST_CONTINUE: 
-            self.mainPanel.updateConditions(self.model.testDuration)
+            self.mainPanel.updateTotalConditions(self.model.testDuration)
         else: 
-            self.mainPanel.updateConditions(time.time() - start_time, stopped=True)
+            self.mainPanel.updateTotalConditions(time.time() - self.start_time, stopped=True)
         
         # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet, self.model.testParameters['fileName'])
+
         ser.close()
+        
+        
+        
 
     def stopTest( self, event ):
         self.TEST_CONTINUE = False
+        print(self.TEST_CONTINUE)
 
         
 

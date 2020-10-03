@@ -3,7 +3,6 @@
 GUI class to handle interations and whatnot.
 """
 
-
 import wx
 import wx.xrc
 
@@ -45,3 +44,31 @@ class MainFrame(wx.Frame):
 
     def addStartTestHandler(self, handler):
         self.Bind( wx.EVT_MENU, handler, id = self.menuItem4.GetId() )
+
+class SerialDialog(wx.Dialog): 
+    def __init__( self, parent , title=""):
+        """Dialog box that pops up due to a bad connection with the selected serial 
+        port. 
+
+        Parameters
+        ----------
+        parent : wx.Frame
+            The parent frame to spawn this dialog window. 
+        title : str, optional
+            window title, by default ""
+        """
+        wx.Dialog.__init__ ( self, parent, title=title, size=( 250,250 ), style = wx.CLOSE_BOX|wx.DEFAULT_DIALOG_STYLE|wx.STAY_ON_TOP )
+        
+        main_box = wx.BoxSizer( wx.VERTICAL )
+        
+        self.dialog_message = wx.StaticText( self, wx.ID_ANY, "Dialog Here", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.dialog_message.Wrap( -1 )
+        main_box.Add( self.dialog_message, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+        self.SetSizer( main_box )
+        self.Layout()
+        
+        self.Centre( wx.BOTH )
+
+    def setDialogMessage(self, message): 
+        self.dialog_message.SetLabel( message )

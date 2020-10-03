@@ -7,9 +7,6 @@ import wx
 import wx.xrc
 import wx.adv
 import wx.lib.plot as wxplot
-from plotter import PlotExample
-
-import numpy as np
 
 class MainPanel(wx.Panel):
     def __init__(self, parent):
@@ -46,8 +43,8 @@ class MainPanel(wx.Panel):
             "Schedule A", 
             "Schedule B", 
             "Schedule C", 
-            EMPTY, 
         ]
+        self.plot_tabs = {}
         self.gaugeRange = 100
 
         boxA = wx.BoxSizer( wx.VERTICAL )
@@ -62,7 +59,7 @@ class MainPanel(wx.Panel):
         # LEFT SETTINGS
         #######################################################################
 
-        boxBTop = wx.BoxSizer( wx.HORIZONTAL )
+        self.boxBTop = wx.BoxSizer( wx.HORIZONTAL )
 
         boxCTestParameters = wx.BoxSizer( wx.VERTICAL )
 
@@ -211,7 +208,7 @@ class MainPanel(wx.Panel):
 
         boxCTestParameters.Add( boxDTextInfo, PROP0, CEN_H, BORDER )
 
-        boxBTop.Add( boxCTestParameters, PROP0, EXP, BORDER )
+        self.boxBTop.Add( boxCTestParameters, PROP0, EXP, BORDER )
 
         #######################################################################
         # / LEFT SETTINGS
@@ -267,16 +264,16 @@ class MainPanel(wx.Panel):
 
         # #######################################################################
         # Plot Tab
-        self.tab3 = wxplot.PlotCanvas(self.pageCPlot)
+        # self.tab3 = wxplot.PlotCanvas(self.pageCPlot)
 
         # self.tab3.Draw(self.draw1Objects())
 
         # #self.tab3.SetSizer( self.boxDTab2 )
         # self.tab3.Layout()
         # self.boxDTab2.Fit( self.tab3 )
-        self.pageCPlot.AddPage( self.tab3, "Plot", True )
+        # self.pageCPlot.AddPage( self.tab3, "X_Y_Plot", True )
 
-        boxBTop.Add( self.pageCPlot, PROP1, EXP |wx.ALL, BORDER )
+        self.boxBTop.Add( self.pageCPlot, PROP1, EXP |wx.ALL, BORDER )
 
         #######################################################################
         # / RIGHT TABS
@@ -288,7 +285,7 @@ class MainPanel(wx.Panel):
         #
         #######################################################################
 
-        boxA.Add( boxBTop, PROP1, EXP, BORDER)
+        boxA.Add( self.boxBTop, PROP1, EXP, BORDER)
 
         #######################################################################
         #
@@ -325,10 +322,10 @@ class MainPanel(wx.Panel):
         boxDCurrentModule = wx.BoxSizer( wx.HORIZONTAL )
 
         self.labelCurrentModule = wx.StaticText( self, label="Now running Schedule: ")
-        self.testCurrentModule = wx.StaticText( self, label="No Schedule Selected")
+        self.textCurrentModule = wx.StaticText( self, label="No Schedule Selected")
 
         boxDCurrentModule.Add( self.labelCurrentModule, PROP0, FLAG, BORDER )
-        boxDCurrentModule.Add( self.testCurrentModule, PROP0, FLAG, BORDER )
+        boxDCurrentModule.Add( self.textCurrentModule, PROP0, FLAG, BORDER )
 
         boxCProgress.Add( boxDCurrentModule, PROP0, CEN_H, BORDER )
 
@@ -346,7 +343,14 @@ class MainPanel(wx.Panel):
         boxCProgress.Add( boxDCurrentTime, PROP0, CEN_H, BORDER )
 
         #######################################################################
-        # Progress Bar
+        # Module Progress Bar
+
+        self.moduleGauge = wx.Gauge( self, range=self.gaugeRange, style=wx.GA_HORIZONTAL )
+        self.moduleGauge.SetValue( 0 )
+        boxCProgress.Add( self.moduleGauge, PROP0, wx.ALL|EXP, BORDER )
+
+        #######################################################################
+        # Total Progress Bar
 
         self.progressGauge = wx.Gauge( self, range=self.gaugeRange, style=wx.GA_HORIZONTAL )
         self.progressGauge.SetValue( 0 )
@@ -374,16 +378,18 @@ class MainPanel(wx.Panel):
         model : Model object
             object that stores the settings
         """
+
         self.textSelectTest.SetLabel( model.testParameters['testSchedule'] )
-        self.textSelectParams.SetLabel( str(model.testParameters['testParams']) )
+        # self.textSelectParams.SetLabel( str(model.testParameters['testParams']) )
+        self.textSelectParams.SetLabel( '\n'.join(model.testParameters['testParams'])  )
         self.textCOMName.SetLabel( model.testParameters['COMPort'] )
         self.textCOMStatus.SetLabel( str(model.testParameters['COMStatus']) )
         self.textSelectFileName.SetLabel( model.testParameters['fileName'] )
 
-        self.testCurrentModule.SetLabel( model.testParameters['testSchedule'] )
+        self.textCurrentModule.SetLabel( model.testParameters['testSchedule'] )
         self.updateScheduleInfo(model)
 
-    def updateConditions(self, time, stopped=False):
+    def updateTotalConditions(self, time, stopped=False):
         """Updates the label and gauge that shows test progress. 
 
         Parameters
@@ -392,10 +398,22 @@ class MainPanel(wx.Panel):
             current time since test started
         """
         self.progressGauge.SetValue( time )
+        self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
         if stopped: 
             self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds" )
-        else: 
-            self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
+
+    def updateModuleConditions(self, time, module):
+        """Updates the label and gauge that shows test progress. 
+
+        Parameters
+        ----------
+        time : float
+            current time since test started
+        """
+        self.moduleGauge.SetValue( time )
+
+        self.textCurrentModule.SetLabel( module )
+            
 
     def updateScheduleInfo(self, model):
         """Updates the infomation on the schedule info tab. 
@@ -454,12 +472,16 @@ class MainPanel(wx.Panel):
     def addStopTestHander(self, handler):
         self.buttonStopTest.Bind( wx.EVT_BUTTON, handler )
 
-    def addToPanel(self, canvas):
-        self.bSizer30.Add(canvas)
-        self.Fit()
+    def drawPlot(self, title, plotGraphics, select=False): 
+        if title not in self.plot_tabs: 
+            self.plot_tabs[title] = wxplot.PlotCanvas(self.pageCPlot)
+            self.pageCPlot.AddPage( self.plot_tabs[title], title, select )
 
-    def drawPlot(self, plotGraphics): 
-        self.tab3.Draw(plotGraphics)
+        self.plot_tabs[title].Draw(plotGraphics)
+    
+    def updatePlot(self, title, plotGraphics): 
+
+        self.plot_tabs[title].Draw(plotGraphics)
 
     
 
