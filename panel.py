@@ -228,10 +228,20 @@ class MainPanel(wx.Panel):
         self.boxDTab1 = wx.BoxSizer( wx.VERTICAL )
 
         self.bitmapUQR = wx.StaticBitmap( self.tab1, bitmap=wx.Bitmap( "images/uqr_logo.bmp", wx.BITMAP_TYPE_ANY ))
-        self.staticPlaceholder = wx.StaticText( self.tab1, label="placeholder")
-
+        self.staticPlaceholder = wx.StaticText(
+            self.tab1, 
+            label="""
+                Requires an Arduino with the analog_in.ino and the required inputs for logging.\n
+                For now, the test will run without any logging, as the program will be 
+                    spitting out pressure values that will hopefully be sent to the brakes. \n
+                The pressure tab is what i have for now in terms of programming the pressure profiles.
+            """
+        )
+        self.link = wx.TextCtrl(self.tab1, value = "For more info, https://github.com/zabuzabuzaza/brake_dyno", style = wx.TE_READONLY|wx.TE_CENTER) 
+        
         self.boxDTab1.Add( self.bitmapUQR, PROP0, wx.ALL|CEN_H, BORDER )
-        self.boxDTab1.Add( self.staticPlaceholder, PROP0, wx.ALL|CEN_H, BORDER )
+        self.boxDTab1.Add( self.staticPlaceholder, PROP1, wx.ALL|CEN_H, BORDER )
+        self.boxDTab1.Add( self.link, PROP0, wx.ALL|wx.EXPAND, BORDER )
 
         self.tab1.SetSizer( self.boxDTab1 )
         self.tab1.Layout()
@@ -370,7 +380,7 @@ class MainPanel(wx.Panel):
 
         self.SetSizer( boxA )
 
-    def updateSettings(self, model):
+    def updateSettings(self, model, schedule):
         """Updates selected labels once settings are applied. 
 
         Parameters
@@ -387,9 +397,9 @@ class MainPanel(wx.Panel):
         self.textSelectFileName.SetLabel( model.testParameters['fileName'] )
 
         self.textCurrentModule.SetLabel( model.testParameters['testSchedule'] )
-        self.updateScheduleInfo(model)
+        self.updateScheduleInfo(model ,schedule)
 
-    def updateTotalConditions(self, time, stopped=False):
+    def updateTotalConditions(self, time, total, module, stopped=False):
         """Updates the label and gauge that shows test progress. 
 
         Parameters
@@ -398,9 +408,13 @@ class MainPanel(wx.Panel):
             current time since test started
         """
         self.progressGauge.SetValue( time )
-        self.testCurrentTime.SetLabel( f"{time:.2f} seconds" )
+        if module != 0: 
+            self.testCurrentTime.SetLabel( f"{time:.2f} seconds of {module}s (total time: {total}s)" )
+        else: 
+            self.testCurrentTime.SetLabel( f"{time:.2f} seconds (total time: {total}s)" )
+
         if stopped: 
-            self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds" )
+            self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds (of {total}s)" )
 
     def updateModuleConditions(self, time, module):
         """Updates the label and gauge that shows test progress. 
@@ -415,7 +429,7 @@ class MainPanel(wx.Panel):
         self.textCurrentModule.SetLabel( module )
             
 
-    def updateScheduleInfo(self, model):
+    def updateScheduleInfo(self, model, schedule):
         """Updates the infomation on the schedule info tab. 
 
         Parameters
@@ -423,20 +437,22 @@ class MainPanel(wx.Panel):
         model : Model object
             stores the currently selected schedule
         """
-        schedule = model.testParameters['testSchedule']
-        if schedule == self.scheduleList[0]:
+        schedule_name = model.testParameters['testSchedule']
+        if schedule_name == self.scheduleList[0]:
             textBlock = ("A testing schedule with a joystick as an analog input.\n"
-                         "The test lasts 20 seconds or until the stop button\n"
-                         "is pressed.")
-        elif schedule == self.scheduleList[1]:
+                         f"The Module list is {schedule.scheduleOrders[schedule_name]}")
+        elif schedule_name == self.scheduleList[1]:
             textBlock = ("The proposed Schedule A for the testign for brake squeal.\n"
-                         "I've no clue how in implement this yet. ")
-        elif schedule == self.scheduleList[2]:
+                         "Currently working on programming the test modules from J2521."
+                         f"The Module list is {schedule.scheduleOrders[schedule_name]}")
+        elif schedule_name == self.scheduleList[2]:
             textBlock = ("The proposed Schedule B for the testign for brake squeal.\n"
-                         "I've no clue how in implement this yet. ")
-        elif schedule == self.scheduleList[3]:
+                         "Currently working on programming the test modules from J2521."
+                         f"The Module list is {schedule.scheduleOrders[schedule_name]}")
+        elif schedule_name == self.scheduleList[3]:
             textBlock = ("The proposed Schedule C for the testign for brake squeal.\n"
-                         "I've no clue how in implement this yet. ")
+                         "Currently working on programming the test modules from J2521."
+                         f"The Module list is {schedule.scheduleOrders[schedule_name]}")
         else:
             textBlock = "No Schedule Selected"
 

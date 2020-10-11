@@ -33,6 +33,7 @@ class Model():
         #     "Schedule C": 60, 
         # }
         self.ALL_PARAMETERS = [
+            "Pressure", 
             "X-Stick", 
             "Y-Stick", 
             "Rotor", 
@@ -92,10 +93,9 @@ class Model():
         """
 
         ser_line = serial.readline()[:-1].decode("utf-8")
-        print(ser_line)
 
         serial_data = [count] + ser_line.split(',')
-        print(serial_data)
+        #print(serial_data)
         float_data = []
 
         for element in serial_data: 
@@ -104,14 +104,7 @@ class Model():
             except ValueError: 
                 float_data.append(0)
 
-
         self.dataSet.append(float_data)
-
-        # print(data)
-
-        # serial.write(bytearray(struct.pack("f", out)))
-        # print(bytearray(struct.pack("f", out)))
-        # serial.write(str.encode(str(data[1])))
 
         return tuple(serial_data)
 
@@ -127,7 +120,7 @@ class Model():
         self.plotSets[key][0] = np.append(self.plotSets[key][0][1:], t_new)
         self.plotSets[key][1] = np.append(self.plotSets[key][1][1:], x_new)
         
-        line_x = wxplot.PolyLine(list(zip(self.plotSets[key][0], self.plotSets[key][1])))
+        line_x = wxplot.PolyLine(list(zip(self.plotSets[key][0], self.plotSets[key][1])), colour="red", width=5)
 
         return wxplot.PlotGraphics([line_x])
     

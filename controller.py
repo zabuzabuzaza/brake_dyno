@@ -26,7 +26,7 @@ class Controller():
         self.TEST_CONTINUE = True
 
         self.model = Model()
-        self.newSchedule = TestSchedules() 
+        self.schedule = TestSchedules() 
 
         self.mainFrame = MainFrame(None, WINDOW_TITLE, WINDOW_SIZE)
 
@@ -74,7 +74,7 @@ class Controller():
 
     def setParamRecord( self, event ):  
         try: 
-            param = self.model.ALL_PARAMETERS[event.GetId() - 1]
+            param = self.model.ALL_PARAMETERS[event.GetId()]
         except IndexError: 
             param = ""
 
@@ -101,10 +101,11 @@ class Controller():
             self.model.tempParameters['fileName'] = util.getDate() + ".csv"
 
         self.model.testParameters = dict(self.model.tempParameters)
-        self.model.testDuration = self.newSchedule.scheduleList[self.model.testParameters['testSchedule']]
-        self.mainPanel.updateSettings(self.model)
+        self.model.testDuration = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
+        self.mainPanel.updateSettings(self.model, self.schedule)
 
         # add plot to GUI
+        self.mainPanel.drawPlot("Pressure", self.model.createCanvas("Pressure"))
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.drawPlot(param, self.model.createCanvas(param))
 
@@ -114,10 +115,11 @@ class Controller():
         self.model.defaultParameters['fileName'] = util.getDate() + ".csv"
         
         self.model.testParameters = dict(self.model.defaultParameters)
-        self.model.testDuration = self.newSchedule.scheduleList[self.model.testParameters['testSchedule']]
-        self.mainPanel.updateSettings(self.model)
+        self.model.testDuration = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
+        self.mainPanel.updateSettings(self.model, self.schedule)
 
         # add plot to GUI
+        self.mainPanel.drawPlot("Pressure", self.model.createCanvas("Pressure"))
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.drawPlot(param, self.model.createCanvas(param))
 
@@ -137,7 +139,7 @@ class Controller():
         self.mainPanel.progressGauge.SetRange(self.model.testDuration)
 
         self.TEST_CONTINUE = True
-        self.newSchedule.testEnd = False
+        self.schedule.testEnd = False
 
         # threads
         t_daq = threading.Thread(target=self.data_aq) 
@@ -153,34 +155,44 @@ class Controller():
         # self.start_time = time.time()
         
         
-        while not self.newSchedule.testEnd: 
+        while not self.schedule.testEnd: 
             # print(self.model.latest_data[1])
             # self.ser.write(str.encode(str(self.model.latest_data[1])))
 
             # newSchedule.runSchedule(self.model.testParameters['testSchedule'])
             
-            for module, length in self.newSchedule.scheduleModules[self.model.testParameters['testSchedule']]:
+            for module, length in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
+                # t_sleep = threading.Thread(target=time.sleep, args=(length, ))
+                # t_sleep.start()
+
+                # refresh plot 
+                self.mainPanel.updatePlot("Pressure", self.model.createCanvas("Pressure"))
+
                 module_start = time.time()
-                self.mainPanel.moduleGauge.SetRange(length)
-                self.newSchedule.runModule(module)
-                print(f"Sleeping for time {length}")
-                time.sleep(length)
-                self.newSchedule.testEnd = True
+                while (time.time() - module_start) < length and self.TEST_CONTINUE: 
 
-                self.mainPanel.updateModuleConditions(time.time() - module_start, module.__name__)
+                    self.mainPanel.moduleGauge.SetRange(length)
+                    pressure = self.schedule.runModule(module, (time.time() - module_start), length)
+                    # try: 
+                    #     pressure = int(pressure)
+                    # except ValueError: 
+                    #     pressure = 0
+                    self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - module_start), pressure))
+                    # print(f"Sleeping for time {length}")
+                    # time.sleep(length)
+                    self.schedule.testEnd = True
+                    time.sleep(0.1)
+                    self.mainPanel.updateModuleConditions(time.time() - module_start, module.__name__)
+                    self.mainPanel.updateTotalConditions(time.time() - module_start, self.model.testDuration, length)
 
-                if not self.TEST_CONTINUE: 
-                    break
+            self.schedule.testEnd = True
 
-            self.newSchedule.testEnd = True
-
-        
         # completes GUI updates
         if self.TEST_CONTINUE: 
-            self.mainPanel.updateTotalConditions(self.model.testDuration)
+            self.mainPanel.updateTotalConditions(self.model.testDuration, self.model.testDuration, 0)
         else: 
-            self.mainPanel.updateTotalConditions(time.time() - self.start_time, stopped=True)
-
+            self.mainPanel.updateTotalConditions(time.time() - self.start_time, self.model.testDuration, 0, stopped=True)
+        
         print("Test Ended")
 
 
@@ -207,9 +219,9 @@ class Controller():
         ser = newArduino.ser
         
         # reset plot
+        
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.updatePlot(param, self.model.createCanvas(param))
-
 
         count = 0
         
@@ -220,21 +232,17 @@ class Controller():
             _, x_data, y_data, _, _, _ = self.model.getSerialData(ser, current)
             
             # update test conditions
-            self.mainPanel.updateTotalConditions(current)
+            # self.mainPanel.updateTotalConditions(current, self.model.testDuration)
 
             # it's too much for the program to have 2 plots at the same time
             # so we need to slow it down
             if count % 2 == 0: 
+                
                 self.mainPanel.updatePlot("X-Stick", self.model.plot1("X-Stick", current, x_data))
                 self.mainPanel.updatePlot("Y-Stick", self.model.plot1("Y-Stick", current, y_data))
                 
             count += 1
 
-        # completes GUI updates
-        if self.TEST_CONTINUE: 
-            self.mainPanel.updateTotalConditions(self.model.testDuration)
-        else: 
-            self.mainPanel.updateTotalConditions(time.time() - self.start_time, stopped=True)
         
         # saves data to csv file & closes serial port safely
         util.data2csv(self.model.dataSet, self.model.testParameters['fileName'])
