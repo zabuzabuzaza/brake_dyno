@@ -44,6 +44,8 @@ class Controller():
         self.defaultSettings(None)
 
         self.start_time = 0
+        self.speed = 0
+        self.pressure = 0
 
     def addMainFrameEventHandlers(self):
         self.mainFrame.addCloseProgramHandler(self.closeProgram)
@@ -92,19 +94,20 @@ class Controller():
         self.model.tempParameters['COMStatus'] = self.checkCOMPort(event.GetString())
 
     def setFileName( self, event ):
-        self.model.tempParameters['fileName'] = event.GetString() + ".csv"
+        self.model.tempParameters['fileName'] = event.GetString()
 
     def applySettings( self, event ):
         # check COM status and update time
         self.model.tempParameters['COMStatus'] = self.checkCOMPort(self.model.tempParameters['COMPort'])
         if self.model.tempParameters['fileName'] == self.model.testParameters['fileName']: 
-            self.model.tempParameters['fileName'] = util.getDate() + ".csv"
+            self.model.tempParameters['fileName'] = util.getDate()
 
         self.model.testParameters = dict(self.model.tempParameters)
         self.model.testDuration = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
         self.mainPanel.updateSettings(self.model, self.schedule)
 
         # add plot to GUI
+        self.mainPanel.drawPlot("Output Speed", self.model.createCanvas("Output Speed"))
         self.mainPanel.drawPlot("Pressure", self.model.createCanvas("Pressure"))
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.drawPlot(param, self.model.createCanvas(param))
@@ -112,13 +115,14 @@ class Controller():
     def defaultSettings( self, event ):
         # check COM status and update time
         self.model.defaultParameters['COMStatus'] = self.checkCOMPort(self.model.defaultParameters['COMPort'])
-        self.model.defaultParameters['fileName'] = util.getDate() + ".csv"
+        self.model.defaultParameters['fileName'] = util.getDate()
         
         self.model.testParameters = dict(self.model.defaultParameters)
         self.model.testDuration = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
         self.mainPanel.updateSettings(self.model, self.schedule)
 
         # add plot to GUI
+        self.mainPanel.drawPlot("Output Speed", self.model.createCanvas("Output Speed"))
         self.mainPanel.drawPlot("Pressure", self.model.createCanvas("Pressure"))
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.drawPlot(param, self.model.createCanvas(param))
@@ -136,7 +140,7 @@ class Controller():
         
         self.start_time = time.time()
         
-        self.mainPanel.progressGauge.SetRange(self.model.testDuration)
+        
 
         self.TEST_CONTINUE = True
         self.schedule.testEnd = False
@@ -154,44 +158,62 @@ class Controller():
         # set timer and acquisition rate
         # self.start_time = time.time()
         
-        
-        while not self.schedule.testEnd: 
-            # print(self.model.latest_data[1])
-            # self.ser.write(str.encode(str(self.model.latest_data[1])))
+        test_start = time.time()
+        folder_name = self.model.testParameters['fileName']
+        total = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
+        self.mainPanel.progressGauge.SetRange(total)
+        print(total)
+        passed = 0
 
-            # newSchedule.runSchedule(self.model.testParameters['testSchedule'])
-            
-            for module, length in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
-                # t_sleep = threading.Thread(target=time.sleep, args=(length, ))
-                # t_sleep.start()
+        # refresh plot 
+        self.mainPanel.updatePlot("Output Speed", self.model.createCanvas("Output Speed"))
+        self.mainPanel.updatePlot("Pressure", self.model.createCanvas("Pressure"))
 
-                # refresh plot 
-                self.mainPanel.updatePlot("Pressure", self.model.createCanvas("Pressure"))
+        for module, initial_temps, pressure_levels, speed_bounds in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
+            for p_index, pressure_lvl in enumerate(pressure_levels): 
+                
+                
+                self.mainPanel.moduleGauge.SetRange(len(initial_temps))
 
-                module_start = time.time()
-                while (time.time() - module_start) < length and self.TEST_CONTINUE: 
+                for t_index, temp in enumerate(initial_temps): 
+                    self.speed = speed_bounds[0]
+                    module_start = time.time()
 
-                    self.mainPanel.moduleGauge.SetRange(length)
-                    pressure = self.schedule.runModule(module, (time.time() - module_start), length)
-                    # try: 
-                    #     pressure = int(pressure)
-                    # except ValueError: 
-                    #     pressure = 0
-                    self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - module_start), pressure))
-                    # print(f"Sleeping for time {length}")
-                    # time.sleep(length)
-                    self.schedule.testEnd = True
-                    time.sleep(0.1)
-                    self.mainPanel.updateModuleConditions(time.time() - module_start, module.__name__)
-                    self.mainPanel.updateTotalConditions(time.time() - module_start, self.model.testDuration, length)
+                    
 
-            self.schedule.testEnd = True
+                    while self.speed > speed_bounds[-1]: 
+                        if not self.TEST_CONTINUE: 
+                            self.finish_serial((time.time() - test_start), total, passed)
+                            return
+                        # if self.model
+                        
+                        self.pressure = self.schedule.runModule(module, (time.time() - module_start), pressure_lvl)
+                        
+                        self.mainPanel.updatePlot("Output Speed", self.model.plot1("Output Speed", (time.time() - test_start), self.speed))
+                        self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - test_start), self.pressure))
+
+                        time.sleep(0.1)
+                        self.mainPanel.updateModuleConditions((p_index, len(pressure_levels)), (t_index, len(initial_temps)), module.__name__)
+                        self.mainPanel.updateTotalConditions((time.time() - test_start), total, passed)
+
+                        self.speed -= 2
+                        print(f"Temp={temp}, P = {self.pressure}, Speed={self.speed}")
+
+                    util.data2csv(self.model.moduleSet, module.__name__, temp, pressure_lvl, folder_name)
+                    self.model.moduleSet = self.model.data_titles.copy()
+                        
+                    passed += 1
+
+        self.finish_serial(time.time() - test_start, total, passed)
+        util.data2csv(self.model.dataSet, foldername=folder_name)
+        self.TEST_CONTINUE = False
+                    
+    def finish_serial(self, finish_time, total, passed): 
+
+        self.schedule.testEnd = True
 
         # completes GUI updates
-        if self.TEST_CONTINUE: 
-            self.mainPanel.updateTotalConditions(self.model.testDuration, self.model.testDuration, 0)
-        else: 
-            self.mainPanel.updateTotalConditions(time.time() - self.start_time, self.model.testDuration, 0, stopped=True)
+        self.mainPanel.updateTotalConditions(finish_time, total, passed, stopped=(not self.TEST_CONTINUE))
         
         print("Test Ended")
 
@@ -225,27 +247,36 @@ class Controller():
 
         count = 0
         
-        while (time.time() - self.start_time) < self.model.testDuration and self.TEST_CONTINUE:
+        # while (time.time() - self.start_time) < self.model.testDuration and self.TEST_CONTINUE:
+        while self.TEST_CONTINUE:
             current = time.time() - self.start_time
             
             # reads and stores serial data
-            _, x_data, y_data, _, _, _ = self.model.getSerialData(ser, current)
-            
+            serial_list = self.model.getSerialData(ser, current)
+            #_, x_data, y_data, t_couple1, _, _ = tuple(serial_list)
+
+            # due to me not having an actual speed measurement, we're using fake speeds
+            serial_list.pop(-1)
+            self.model.append_data(serial_list + [self.speed, self.pressure])
             # update test conditions
             # self.mainPanel.updateTotalConditions(current, self.model.testDuration)
 
             # it's too much for the program to have 2 plots at the same time
             # so we need to slow it down
-            if count % 2 == 0: 
+            # if count % 1 == 0: 
                 
-                self.mainPanel.updatePlot("X-Stick", self.model.plot1("X-Stick", current, x_data))
-                self.mainPanel.updatePlot("Y-Stick", self.model.plot1("Y-Stick", current, y_data))
+            self.mainPanel.updatePlot("X-Stick", self.model.plot1("X-Stick", current, serial_list[1]))
+            self.mainPanel.updatePlot("Y-Stick", self.model.plot1("Y-Stick", current, serial_list[2]))
+            self.mainPanel.updatePlot("RotorT", self.model.plot1("RotorT", current, serial_list[3]))
+            self.mainPanel.updatePlot("Motor", self.model.plot1("Motor", current, self.speed))
+
+            
+            
                 
             count += 1
 
         
-        # saves data to csv file & closes serial port safely
-        util.data2csv(self.model.dataSet, self.model.testParameters['fileName'])
+        
 
         ser.close()
         

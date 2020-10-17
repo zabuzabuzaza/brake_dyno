@@ -36,22 +36,24 @@ class Model():
             "Pressure", 
             "X-Stick", 
             "Y-Stick", 
-            "Rotor", 
-            "Caliper", 
-            "MotorT", 
+            "RotorT", 
+            "CaliperT", 
+            "Motor", 
         ]
 
         self.testDuration = self.DEFAULT_TEST_DURATION
-        self.dataSet = [["Seconds", "X_Data", "Y Data", "Input3", "Input4", "Input5"]]
+        self.data_titles = [["Seconds", "X_Data", "Y Data", "Thermocouple 1", "Thermocouple 2", "Motor Speed", "Brake Pressure"]]
+        self.dataSet = self.data_titles.copy()
+        self.moduleSet = self.data_titles.copy()
         self.plotSets = {}
 
         # default settings 
         self.defaultParameters = {
             'testSchedule': "Joystick", 
-            'testParams': ["X-Stick", "Y-Stick"], 
+            'testParams': ["X-Stick", "Y-Stick", "RotorT", "Motor"], 
             'COMPort': "COM3", 
             'COMStatus': "Click Apply to check Status", 
-            'fileName': util.getDate() + ".csv", 
+            'fileName': util.getDate(), 
         }
 
         # stores settings 
@@ -59,28 +61,6 @@ class Model():
 
         # temporarily stores settings that will either be applied or cancelled
         self.tempParameters = dict(self.testParameters)
-
-    # def setTestDuration(self, schedule_name):
-    #     """
-    #     Event handler for Text Entry to Test Length.
-
-    #     Parameters
-    #     ----------
-    #     event : event obj
-    #         The textEntry object from which to get the entered text.
-    #     """
-        
-    #     if schedule_name == self.scheduleList[0]: 
-    #         self.testDuration = 50
-    #     elif schedule_name == self.scheduleList[1]: 
-    #         self.testDuration = 20
-    #     elif schedule_name == self.scheduleList[2]: 
-    #         self.testDuration = 40
-    #     elif schedule_name == self.scheduleList[3]: 
-    #         self.testDuration = 60
-    #     else: 
-    #         # should not happen
-    #         self.testDuration = 5
 
     def getSerialData(self, serial, count):
         """
@@ -96,17 +76,32 @@ class Model():
 
         serial_data = [count] + ser_line.split(',')
         #print(serial_data)
-        float_data = []
+        
 
-        for element in serial_data: 
+        # for element in serial_data: 
+        #     try: 
+        #         float_data.append(float(element))
+        #     except ValueError: 
+        #         float_data.append(0)
+
+        # self.dataSet.append(float_data)
+
+        return serial_data
+    
+    def append_data(self, data_list): 
+
+        float_data = []
+        for element in data_list: 
             try: 
                 float_data.append(float(element))
             except ValueError: 
                 float_data.append(0)
 
         self.dataSet.append(float_data)
+        self.moduleSet.append(float_data)
 
-        return tuple(serial_data)
+        
+
 
     def createCanvas(self, key):
         self.plotSets[key] = [np.array(np.zeros(self.PLOT_WINDOW))] * 3

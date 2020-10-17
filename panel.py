@@ -34,8 +34,8 @@ class MainPanel(wx.Panel):
         EMPTY = wx.EmptyString
         FLAG = wx.ALL
         BORDER = 5
-        PROP0 = 0 # Proportion = 0
-        PROP1 = 1 # Proportion = 1
+        PROP0 = 0 # does not expand
+        PROP1 = 1 # does expand
 
         # Other Constants
         self.scheduleList = [
@@ -105,6 +105,8 @@ class MainPanel(wx.Panel):
         
         self.checkJoyX.SetValue(True)
         self.checkJoyY.SetValue(True)
+        self.checkRotorTemp.SetValue(True)
+        self.checkMotorSpeed.SetValue(True)
 
         boxFParamChoices.Add( self.checkJoyX, PROP0, FLAG, BORDER )
         boxFParamChoices.Add( self.checkJoyY, PROP0, FLAG, BORDER )
@@ -190,7 +192,7 @@ class MainPanel(wx.Panel):
         self.labelCOMStatus = wx.StaticText( self, label="COM Status", style=RIGHT )
         self.textCOMStatus = wx.StaticText( self, label="No Status")
 
-        self.labelSelectFileName = wx.StaticText( self, label="File will be\nsaved as", style=RIGHT )
+        self.labelSelectFileName = wx.StaticText( self, label="Files will be\nsaved in", style=RIGHT )
         self.textSelectFileName = wx.StaticText( self, label="<enter default>")
 
         gridETestInfo.Add( self.labelSelectTest, PROP0, wx.ALL|RIGHT, BORDER )
@@ -251,7 +253,8 @@ class MainPanel(wx.Panel):
         # #######################################################################
         # Schedule Information Tab
 
-        self.tab2 = wx.Panel( self.pageCPlot, style=wx.TAB_TRAVERSAL )
+        self.tab2 = wx.ScrolledWindow( self.pageCPlot, style=wx.HSCROLL|wx.VSCROLL )
+        self.tab2.SetScrollRate( 5, 5 )
         self.boxDTab2 = wx.BoxSizer( wx.VERTICAL )
 
         self.titleGeneralInfo = wx.StaticText( self.tab2, label="Test Schedule Infomation")
@@ -399,7 +402,7 @@ class MainPanel(wx.Panel):
         self.textCurrentModule.SetLabel( model.testParameters['testSchedule'] )
         self.updateScheduleInfo(model ,schedule)
 
-    def updateTotalConditions(self, time, total, module, stopped=False):
+    def updateTotalConditions(self, time, total, test, stopped=False):
         """Updates the label and gauge that shows test progress. 
 
         Parameters
@@ -407,16 +410,16 @@ class MainPanel(wx.Panel):
         time : float
             current time since test started
         """
-        self.progressGauge.SetValue( time )
-        if module != 0: 
-            self.testCurrentTime.SetLabel( f"{time:.2f} seconds of {module}s (total time: {total}s)" )
-        else: 
-            self.testCurrentTime.SetLabel( f"{time:.2f} seconds (total time: {total}s)" )
+        self.progressGauge.SetValue( test )
+        # if test != 0: 
+        self.testCurrentTime.SetLabel( f"{time:.2f} seconds passed (Test #{test} out of {total} tests)" )
+        # else: 
+        #     self.testCurrentTime.SetLabel( f"{time:.2f} seconds passed (total tests: {total})" )
 
         if stopped: 
-            self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds (of {total}s)" )
+            self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds" )
 
-    def updateModuleConditions(self, time, module):
+    def updateModuleConditions(self, pressure_tests, temp_tests, module_name):
         """Updates the label and gauge that shows test progress. 
 
         Parameters
@@ -424,9 +427,9 @@ class MainPanel(wx.Panel):
         time : float
             current time since test started
         """
-        self.moduleGauge.SetValue( time )
+        self.moduleGauge.SetValue( temp_tests[0] )
 
-        self.textCurrentModule.SetLabel( module )
+        self.textCurrentModule.SetLabel(f"{module_name} (Temp #{temp_tests[0]} of {temp_tests[1]})(Pressure #{pressure_tests[0]} of {pressure_tests[1]})")
             
 
     def updateScheduleInfo(self, model, schedule):

@@ -1,4 +1,10 @@
 #include <Servo.h> 
+#include <Thermocouple.h>
+#include <MAX6675_Thermocouple.h>
+
+#define SCK_PIN 9
+#define CS_PIN 10
+#define SO_PIN 11
 
 // input pins and values
 int analogX = A0; 
@@ -6,6 +12,8 @@ int analogY = A1;
 int k_tc1 = 3; 
 int k_tc2 = 4; 
 int k_tc3 = 5; 
+
+Thermocouple* thermocouple;
 
 int inputX; 
 int inputY; 
@@ -23,6 +31,8 @@ int servoAngle = 0;
 void setup() {
   Serial.begin(9600); 
   digitalWrite(LED_BUILTIN, LOW); 
+
+  thermocouple = new MAX6675_Thermocouple(SCK_PIN, CS_PIN, SO_PIN);
   
   //Declaring LED pin as output
   pinMode(k_tc1, INPUT);
@@ -41,11 +51,13 @@ void loop() {
   inputTC2 = digitalRead(k_tc2); 
   inputTC3 = digitalRead(k_tc3); 
 
+  const double celsius = thermocouple->readCelsius();
+
   Serial.print(inputX); 
   Serial.print(','); 
   Serial.print(inputY); 
   Serial.print(','); 
-  Serial.print(inputTC1); 
+  Serial.print(celsius); 
   Serial.print(','); 
   Serial.print(inputTC2); 
   Serial.print(','); 
@@ -66,6 +78,6 @@ void loop() {
 //    
 //  }
 
-  delay(50);
+  delay(177);
   
 }

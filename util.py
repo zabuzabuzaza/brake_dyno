@@ -33,7 +33,7 @@ class Arduino():
 def getDate(): 
     return str(datetime.now().strftime("%b %d %H-%M"))
 
-def data2csv(data_list, filename='data.csv'):
+def data2csv(data_list, module=None, temp=None, pressure=None, foldername='data'):
     """
     Takes a data structure and saves its contents to a csv file. If one
     already exists with the same given name, it will be overwritten.
@@ -48,13 +48,27 @@ def data2csv(data_list, filename='data.csv'):
         avoid unwanted file overrides.
     """
     # check for duplicates: 
-    fileRegex = re.compile(r"\(\d\)\.csv$")
-    while os.path.exists(filename): 
-        matchObj = fileRegex.search(filename)
-        if matchObj == None: 
-            filename = filename[:-4] + "(1).csv"
-        else: 
-            filename = f"data({int(matchObj.group()[1]) + 1}).csv" 
+    # folderRegex = re.compile(r"\(\d\)$")
+    # while os.path.exists(foldername): 
+    #     matchObj = folderRegex.search(foldername)
+    #     if matchObj == None: 
+    #         foldername = foldername[:-4] + "(1)"
+    #     else: 
+    #         foldername = f"data({int(matchObj.group()[1]) + 1})" 
+
+    try: 
+        os.mkdir(foldername)
+    except FileExistsError: 
+        pass 
+
+    if module == None: 
+        filename = "fulltestrun.csv"
+    else: 
+        filename = f"{module}_t({temp})_p({pressure})" + ".csv"
+    filename = os.path.join(foldername, filename)
+
+    
+
 
     # write to csv file
     with open(filename, 'w', newline='') as csv_file:
