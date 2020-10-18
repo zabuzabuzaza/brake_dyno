@@ -152,38 +152,117 @@ class Controller():
         t_ser.start()
 
     def sendSerial(self): 
-        
-        # newSchedule.currentModule = self.model.testParameters['testSchedule']
-
-        # set timer and acquisition rate
-        # self.start_time = time.time()
-        
         test_start = time.time()
         folder_name = self.model.testParameters['fileName']
         total = self.schedule.scheduleList[self.model.testParameters['testSchedule']]
         self.mainPanel.progressGauge.SetRange(total)
-        print(total)
-        passed = 0
+        self.passed = 0
 
         # refresh plot 
         self.mainPanel.updatePlot("Output Speed", self.model.createCanvas("Output Speed"))
         self.mainPanel.updatePlot("Pressure", self.model.createCanvas("Pressure"))
 
+        if self.model.testParameters['testSchedule'] == "Constant Speed": 
+            self.constant_speed(total, test_start, folder_name)
+        elif self.model.testParameters['testSchedule'] == "Torque Control": 
+            self.torque_control(total, test_start, folder_name)
+        else: 
+            self.brake_squeal(total, test_start, folder_name)
+        
+
+        self.finish_serial(time.time() - test_start, total)
+        util.data2csv(self.model.dataSet, foldername=folder_name)
+        self.TEST_CONTINUE = False
+
+    def constant_speed(self, total, test_start, folder_name): 
+        for module, speed_list, pressure_levels, duration_list in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
+            for s_index, speed in enumerate(speed_list): 
+                self.mainPanel.moduleGauge.SetRange(len(duration_list))
+
+                for p_index, pressure_lvl in enumerate(pressure_levels): 
+                    for d_index, duration in enumerate(duration_list): 
+                        # here, insert brake warm up routine to bring brakes up to the required temperature
+                        # or wait until it cools down
+
+                        self.speed = speed
+
+                        module_start = time.time()
+
+                        while (time.time()-module_start) < duration: 
+                            if not self.TEST_CONTINUE: 
+                                self.finish_serial((time.time() - test_start), total)
+                                return
+
+                            self.pressure = self.schedule.runModule(module, (time.time() - module_start), pressure_lvl)
+
+                            self.mainPanel.updatePlot("Output Speed", self.model.plot1("Output Speed", (time.time() - test_start), self.speed))
+                            self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - test_start), self.pressure))
+
+                            time.sleep(0.1)
+                            self.mainPanel.updateModuleConditions((s_index, len(speed_list)), (d_index, len(duration_list)), module.__name__)
+                            self.mainPanel.updateTotalConditions((time.time() - test_start), total, self.passed)
+
+                            print(f"Duration = {duration}, Speed={self.speed}")
+
+                        util.data2csv(self.model.moduleSet, module.__name__, duration, self.speed, folder_name)
+                        self.model.moduleSet = self.model.data_titles.copy()
+                            
+                        self.passed += 1
+
+    def torque_control(self, total, test_start, folder_name): 
+        for module, speed_pairs, pressure_levels in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
+            for s_index, pair in enumerate(speed_pairs): 
+                self.mainPanel.moduleGauge.SetRange(len(speed_pairs))
+
+                for p_index, pressure_lvl in enumerate(pressure_levels): 
+                    # here, insert brake warm up routine to bring brakes up to the required temperature
+                    # or wait until it cools down
+
+                    self.speed = pair[0]
+
+                    module_start = time.time()
+
+                    while self.speed > pair[1]: 
+                        if not self.TEST_CONTINUE: 
+                            self.finish_serial((time.time() - test_start), total)
+                            return
+
+                        self.pressure = self.schedule.runModule(module, (time.time() - module_start), pressure_lvl)
+
+                        self.mainPanel.updatePlot("Output Speed", self.model.plot1("Output Speed", (time.time() - test_start), self.speed))
+                        self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - test_start), self.pressure))
+
+                        time.sleep(0.1)
+                        self.mainPanel.updateModuleConditions((p_index, len(pressure_levels)), (s_index, len(speed_pairs)), module.__name__)
+                        self.mainPanel.updateTotalConditions((time.time() - test_start), total, self.passed)
+
+                        self.speed -= 1
+                        print(f"Pressure = {self.pressure}, Speed={self.speed}")
+
+                    util.data2csv(self.model.moduleSet, module.__name__, self.pressure, self.speed, folder_name)
+                    self.model.moduleSet = self.model.data_titles.copy()
+                        
+                    self.passed += 1
+
+
+
+    def brake_squeal(self, total, test_start, folder_name): 
         for module, initial_temps, pressure_levels, speed_bounds in self.schedule.scheduleModules[self.model.testParameters['testSchedule']]:
             for p_index, pressure_lvl in enumerate(pressure_levels): 
-                
                 
                 self.mainPanel.moduleGauge.SetRange(len(initial_temps))
 
                 for t_index, temp in enumerate(initial_temps): 
+
+                    # here, insert brake warm up routine to bring brakes up to the required temperature
+                    # or wait until it cools down
+
                     self.speed = speed_bounds[0]
                     module_start = time.time()
 
-                    
-
                     while self.speed > speed_bounds[-1]: 
                         if not self.TEST_CONTINUE: 
-                            self.finish_serial((time.time() - test_start), total, passed)
+                            self.finish_serial((time.time() - test_start), total)
                             return
                         # if self.model
                         
@@ -194,7 +273,7 @@ class Controller():
 
                         time.sleep(0.1)
                         self.mainPanel.updateModuleConditions((p_index, len(pressure_levels)), (t_index, len(initial_temps)), module.__name__)
-                        self.mainPanel.updateTotalConditions((time.time() - test_start), total, passed)
+                        self.mainPanel.updateTotalConditions((time.time() - test_start), total, self.passed)
 
                         self.speed -= 2
                         print(f"Temp={temp}, P = {self.pressure}, Speed={self.speed}")
@@ -202,18 +281,14 @@ class Controller():
                     util.data2csv(self.model.moduleSet, module.__name__, temp, pressure_lvl, folder_name)
                     self.model.moduleSet = self.model.data_titles.copy()
                         
-                    passed += 1
-
-        self.finish_serial(time.time() - test_start, total, passed)
-        util.data2csv(self.model.dataSet, foldername=folder_name)
-        self.TEST_CONTINUE = False
+                    self.passed += 1
                     
-    def finish_serial(self, finish_time, total, passed): 
+    def finish_serial(self, finish_time, total): 
 
         self.schedule.testEnd = True
 
         # completes GUI updates
-        self.mainPanel.updateTotalConditions(finish_time, total, passed, stopped=(not self.TEST_CONTINUE))
+        self.mainPanel.updateTotalConditions(finish_time, total, self.passed, stopped=(not self.TEST_CONTINUE))
         
         print("Test Ended")
 
@@ -270,19 +345,10 @@ class Controller():
             self.mainPanel.updatePlot("RotorT", self.model.plot1("RotorT", current, serial_list[3]))
             self.mainPanel.updatePlot("Motor", self.model.plot1("Motor", current, self.speed))
 
-            
-            
-                
             count += 1
-
-        
-        
 
         ser.close()
         
-        
-        
-
     def stopTest( self, event ):
         self.TEST_CONTINUE = False
         print(self.TEST_CONTINUE)

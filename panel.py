@@ -43,6 +43,8 @@ class MainPanel(wx.Panel):
             "Schedule A", 
             "Schedule B", 
             "Schedule C", 
+            "Constant Speed", 
+            "Torque Control", 
         ]
         self.plot_tabs = {}
         self.gaugeRange = 100
