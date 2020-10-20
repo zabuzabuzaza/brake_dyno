@@ -31,4 +31,4 @@ Done
 
 To Do
 ======
-- create multiple plots for the selected parameters
+- input speeds for constant speed and torque schemes
