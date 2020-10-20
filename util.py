@@ -5,8 +5,11 @@ Utilities script for various functions.
 import os
 import csv
 import serial
-import re
+
 from datetime import datetime
+
+# probably wont need
+import re
 
 class Arduino():
     def __init__(self, port='COM3'):
@@ -31,6 +34,12 @@ class Arduino():
             # self.ser.flushInput()
 
 def getDate(): 
+    """Returns data in Mont DD HH-MM format. 
+
+    Returns
+    -------
+    data : str
+    """
     return str(datetime.now().strftime("%b %d %H-%M"))
 
 def data2csv(data_list, module=None, temp=None, pressure=None, foldername='data'):
@@ -47,6 +56,7 @@ def data2csv(data_list, module=None, temp=None, pressure=None, foldername='data'
         Will want to implement the current date into the default filename to
         avoid unwanted file overrides.
     """
+
     # check for duplicates: 
     # folderRegex = re.compile(r"\(\d\)$")
     # while os.path.exists(foldername): 

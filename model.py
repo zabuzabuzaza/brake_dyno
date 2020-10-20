@@ -18,6 +18,9 @@ import struct
 
 import time
 
+# if checking logging input from serial
+PRINT_SERIAL_IN = False
+
 class Model():
     def __init__(self):
         """
@@ -50,7 +53,7 @@ class Model():
         # default settings 
         self.defaultParameters = {
             'testSchedule': "Joystick", 
-            'testParams': ["X-Stick", "Y-Stick", "RotorT", "Motor"], 
+            'testParams': ["X-Stick", "Y-Stick", "RotorT", "Caliper Temp", "Motor"], 
             'COMPort': "COM3", 
             'COMStatus': "Click Apply to check Status", 
             'fileName': util.getDate(), 
@@ -63,8 +66,7 @@ class Model():
         self.tempParameters = dict(self.testParameters)
 
     def getSerialData(self, serial, count):
-        """
-        Reads the incoming data from the serial port and adds it to this
+        """Reads the incoming data from the serial port and adds it to this
         object's data structure.
         Parameters
         ----------
@@ -73,22 +75,18 @@ class Model():
         """
 
         ser_line = serial.readline()[:-1].decode("utf-8")
-
         serial_data = [count] + ser_line.split(',')
-        #print(serial_data)
-        
-
-        # for element in serial_data: 
-        #     try: 
-        #         float_data.append(float(element))
-        #     except ValueError: 
-        #         float_data.append(0)
-
-        # self.dataSet.append(float_data)
 
         return serial_data
     
     def append_data(self, data_list): 
+        """Add a list of data for a given time step to the full data set. 
+
+        Parameters
+        ----------
+        data_list : [floats]
+            list of inputs for a given time. 
+        """
 
         float_data = []
         for element in data_list: 
@@ -104,6 +102,18 @@ class Model():
 
 
     def createCanvas(self, key):
+        """Creates a plot for a given parameter (indicated by the key). 
+
+        Parameters
+        ----------
+        key : string
+            to reference the plot object stored in a dict. 
+
+        Returns
+        -------
+        PlotGraphics obj
+            plot with no line
+        """
         self.plotSets[key] = [np.array(np.zeros(self.PLOT_WINDOW))] * 3
 
         line_x = wxplot.PolyLine(list(zip(self.plotSets[key][0], self.plotSets[key][1])))
@@ -112,6 +122,22 @@ class Model():
         return wxplot.PlotGraphics([line_x, line_y], title="Title")
 
     def plot1(self, key, t_new, x_new):
+        """Plots a line for one data point for a given time. 
+
+        Parameters
+        ----------
+        key : str
+            reference to the plot to plot on. 
+        t_new : float
+            time point
+        x_new : float
+            data point
+
+        Returns
+        -------
+        PlotGraphics obj
+            plot object with updated plot line
+        """
         self.plotSets[key][0] = np.append(self.plotSets[key][0][1:], t_new)
         self.plotSets[key][1] = np.append(self.plotSets[key][1][1:], x_new)
         
@@ -120,6 +146,8 @@ class Model():
         return wxplot.PlotGraphics([line_x])
     
     def plot2(self, key, t_new, x_new, y_new):
+        """NOT USED, DELETE EVENTUALLY
+        """
         self.plotSets[key][0] = np.append(self.plotSets[key][0][1:], t_new)
         self.plotSets[key][1] = np.append(self.plotSets[key][1][1:], x_new)
         self.plotSets[key][2] = np.append(self.plotSets[key][2][1:], y_new)

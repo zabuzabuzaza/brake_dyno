@@ -88,37 +88,38 @@ class MainPanel(wx.Panel):
         #######################################################################
         # Choose which parameters to record
 
-        self.labelRecording = wx.StaticText( self, label="Parameter\nRecording", style=RIGHT )
+        # self.labelRecording = wx.StaticText( self, label="Parameter\nRecording", style=RIGHT )
 
-        self.scrollEWinParam = wx.ScrolledWindow( self, style=wx.HSCROLL|wx.VSCROLL )
-        self.scrollEWinParam.SetScrollRate( 5, 5 )
-        self.scrollEWinParam.SetMinSize( ( -1,150 ) )
+        # self.scrollEWinParam = wx.ScrolledWindow( self, style=wx.HSCROLL|wx.VSCROLL )
+        # self.scrollEWinParam.SetScrollRate( 5, 5 )
+        # self.scrollEWinParam.SetMinSize( ( -1,150 ) )
 
-        boxFParamChoices = wx.BoxSizer( wx.VERTICAL )
+        # boxFParamChoices = wx.BoxSizer( wx.VERTICAL )
 
-        #######################################################################
-        # Checkbox list of parameters
+        # #######################################################################
+        # # Checkbox list of parameters
 
-        self.checkJoyX = wx.CheckBox( self.scrollEWinParam, id=1, label="X-Position")
-        self.checkJoyY = wx.CheckBox( self.scrollEWinParam, id=2, label="Y-Position")
-        self.checkRotorTemp = wx.CheckBox( self.scrollEWinParam, id=3, label="Rotor Temp")
-        self.checkCalipTemp = wx.CheckBox( self.scrollEWinParam, id=4, label="Caliper Temp")
-        self.checkMotorSpeed = wx.CheckBox( self.scrollEWinParam, id=5, label="Motor Speed")
+        # self.checkJoyX = wx.CheckBox( self.scrollEWinParam, id=1, label="X-Position")
+        # self.checkJoyY = wx.CheckBox( self.scrollEWinParam, id=2, label="Y-Position")
+        # self.checkRotorTemp = wx.CheckBox( self.scrollEWinParam, id=3, label="Rotor Temp")
+        # self.checkCalipTemp = wx.CheckBox( self.scrollEWinParam, id=4, label="Caliper Temp")
+        # self.checkMotorSpeed = wx.CheckBox( self.scrollEWinParam, id=5, label="Motor Speed")
         
-        self.checkJoyX.SetValue(True)
-        self.checkJoyY.SetValue(True)
-        self.checkRotorTemp.SetValue(True)
-        self.checkMotorSpeed.SetValue(True)
+        # self.checkJoyX.SetValue(True)
+        # self.checkJoyY.SetValue(True)
+        # self.checkRotorTemp.SetValue(True)
+        # self.checkMotorSpeed.SetValue(True)
+        # self.checkCalipTemp.SetValue(True)
 
-        boxFParamChoices.Add( self.checkJoyX, PROP0, FLAG, BORDER )
-        boxFParamChoices.Add( self.checkJoyY, PROP0, FLAG, BORDER )
-        boxFParamChoices.Add( self.checkRotorTemp, PROP0, FLAG, BORDER )
-        boxFParamChoices.Add( self.checkCalipTemp, PROP0, FLAG, BORDER )
-        boxFParamChoices.Add( self.checkMotorSpeed, PROP0, FLAG, BORDER )
+        # boxFParamChoices.Add( self.checkJoyX, PROP0, FLAG, BORDER )
+        # boxFParamChoices.Add( self.checkJoyY, PROP0, FLAG, BORDER )
+        # boxFParamChoices.Add( self.checkRotorTemp, PROP0, FLAG, BORDER )
+        # boxFParamChoices.Add( self.checkCalipTemp, PROP0, FLAG, BORDER )
+        # boxFParamChoices.Add( self.checkMotorSpeed, PROP0, FLAG, BORDER )
 
-        self.scrollEWinParam.SetSizer( boxFParamChoices )
-        self.scrollEWinParam.Layout()
-        boxFParamChoices.Fit( self.scrollEWinParam )
+        # self.scrollEWinParam.SetSizer( boxFParamChoices )
+        # self.scrollEWinParam.Layout()
+        # boxFParamChoices.Fit( self.scrollEWinParam )
 
         #######################################################################
         # Choose Serial Port to read / write
@@ -129,20 +130,20 @@ class MainPanel(wx.Panel):
         #######################################################################
         # Enter custom csv filename
 
-        self.labelFileName = wx.StaticText( self, label="File Name\n(optional)", style=RIGHT )
+        self.labelFileName = wx.StaticText( self, label="Folder Name\n(optional)", style=RIGHT )
 
         boxEFileName = wx.BoxSizer( wx.HORIZONTAL )
 
         self.entryFileName = wx.TextCtrl( self, value=wx.EmptyString, style=wx.TE_PROCESS_ENTER|wx.TE_RIGHT )
-        self.labelFileExtension = wx.StaticText( self, label=".csv")
+        self.labelFileExtension = wx.StaticText( self, label="")
 
         boxEFileName.Add( self.entryFileName, PROP0, wx.ALL|CEN_V, BORDER )
         boxEFileName.Add( self.labelFileExtension, PROP0, wx.ALL|CEN_V, BORDER )
 
         gridDTestParameters.Add( self.labelSchedule, PROP0, wx.ALL|CEN_V|RIGHT, BORDER )
         gridDTestParameters.Add( self.choiceSchedule, PROP0, wx.ALL|CEN_V, BORDER )
-        gridDTestParameters.Add( self.labelRecording, PROP0, wx.ALL|RIGHT, BORDER )
-        gridDTestParameters.Add( self.scrollEWinParam, PROP1, EXP|wx.ALL|CEN_V, BORDER )
+        # gridDTestParameters.Add( self.labelRecording, PROP0, wx.ALL|RIGHT, BORDER )
+        # gridDTestParameters.Add( self.scrollEWinParam, PROP1, EXP|wx.ALL|CEN_V, BORDER )
         gridDTestParameters.Add( self.labelCOMPort, PROP0, wx.ALL|RIGHT|CEN_V, BORDER )
         gridDTestParameters.Add( self.entryCOMPort, PROP0, wx.ALL|CEN_V, BORDER )
         gridDTestParameters.Add( self.labelFileName, PROP0, wx.ALL|CEN_V|RIGHT, BORDER )
@@ -186,8 +187,8 @@ class MainPanel(wx.Panel):
 
         self.labelSelectTest = wx.StaticText( self, label="Selected Test", style=RIGHT )
         self.textSelectTest = wx.StaticText( self, label="No Test\nSelected")
-        self.labelSelectParams = wx.StaticText( self, label="Parameters\nto be\nrecorded", style=RIGHT )
-        self.textSelectParams = wx.StaticText( self, label="None Selected")
+        #self.labelSelectParams = wx.StaticText( self, label="Parameters\nto be\nrecorded", style=RIGHT )
+        #self.textSelectParams = wx.StaticText( self, label="None Selected")
         self.labelCOMName = wx.StaticText( self, label="COM Port", style=RIGHT )
         self.textCOMName = wx.StaticText( self, label="No Name")
 
@@ -199,8 +200,8 @@ class MainPanel(wx.Panel):
 
         gridETestInfo.Add( self.labelSelectTest, PROP0, wx.ALL|RIGHT, BORDER )
         gridETestInfo.Add( self.textSelectTest, PROP0, wx.ALL, BORDER )
-        gridETestInfo.Add( self.labelSelectParams, PROP0, wx.ALL|RIGHT, BORDER )
-        gridETestInfo.Add( self.textSelectParams, PROP0, wx.ALL|CEN_V, BORDER )
+        #gridETestInfo.Add( self.labelSelectParams, PROP0, wx.ALL|RIGHT, BORDER )
+        #gridETestInfo.Add( self.textSelectParams, PROP0, wx.ALL|CEN_V, BORDER )
         gridETestInfo.Add( self.labelCOMName, PROP0, wx.ALL|RIGHT, BORDER )
         gridETestInfo.Add( self.textCOMName, PROP0, wx.ALL|CEN_V, BORDER )
         gridETestInfo.Add( self.labelCOMStatus, PROP0, wx.ALL|RIGHT, BORDER )
@@ -396,7 +397,7 @@ class MainPanel(wx.Panel):
 
         self.textSelectTest.SetLabel( model.testParameters['testSchedule'] )
         # self.textSelectParams.SetLabel( str(model.testParameters['testParams']) )
-        self.textSelectParams.SetLabel( '\n'.join(model.testParameters['testParams'])  )
+        # self.textSelectParams.SetLabel( '\n'.join(model.testParameters['testParams'])  )
         self.textCOMName.SetLabel( model.testParameters['COMPort'] )
         self.textCOMStatus.SetLabel( str(model.testParameters['COMStatus']) )
         self.textSelectFileName.SetLabel( model.testParameters['fileName'] )
@@ -413,10 +414,7 @@ class MainPanel(wx.Panel):
             current time since test started
         """
         self.progressGauge.SetValue( test )
-        # if test != 0: 
         self.testCurrentTime.SetLabel( f"{time:.2f} seconds passed (Test #{test} out of {total} tests)" )
-        # else: 
-        #     self.testCurrentTime.SetLabel( f"{time:.2f} seconds passed (total tests: {total})" )
 
         if stopped: 
             self.testCurrentTime.SetLabel( f"Test stopped at {time:.2f} seconds" )
@@ -430,7 +428,6 @@ class MainPanel(wx.Panel):
             current time since test started
         """
         self.moduleGauge.SetValue( temp_tests[0] )
-
         self.textCurrentModule.SetLabel(f"{module_name} (Temp #{temp_tests[0]} of {temp_tests[1]})(Pressure #{pressure_tests[0]} of {pressure_tests[1]})")
             
 
@@ -447,17 +444,32 @@ class MainPanel(wx.Panel):
             textBlock = ("A testing schedule with a joystick as an analog input.\n"
                          f"The Module list is {schedule.scheduleOrders[schedule_name]}")
         elif schedule_name == self.scheduleList[1]:
-            textBlock = ("The proposed Schedule A for the testign for brake squeal.\n"
-                         "Currently working on programming the test modules from J2521."
+            textBlock = ("The proposed Schedule A for the testing for brake squeal.\n"
+                         "This is the first part of the test schedules from SAE-J2521"
                          f"The Module list is {schedule.scheduleOrders[schedule_name]}")
         elif schedule_name == self.scheduleList[2]:
-            textBlock = ("The proposed Schedule B for the testign for brake squeal.\n"
-                         "Currently working on programming the test modules from J2521."
+            textBlock = ("The proposed Schedule B for the testing for brake squeal.\n"
+                         "For now, this is the same as Schedule A"
                          f"The Module list is {schedule.scheduleOrders[schedule_name]}")
         elif schedule_name == self.scheduleList[3]:
-            textBlock = ("The proposed Schedule C for the testign for brake squeal.\n"
-                         "Currently working on programming the test modules from J2521."
+            textBlock = ("The proposed Schedule C for the testing for brake squeal.\n"
+                         "For now, this is the same as Schedule A"
                          f"The Module list is {schedule.scheduleOrders[schedule_name]}")
+        elif schedule_name == self.scheduleList[4]:
+            textBlock = ("A Constant Speed test schedule for the testing for brake fade.\n"
+                         "In this schedule, the brakes will be applied for a given \n"
+                         "pressure and duration. The motor speed will be held constant \n"
+                         "during this time. \n"
+                         f"Base Speeds are {schedule.moduleList[-2][1]} km\h \n"
+                         f"For each base speed, the brake pressures are {schedule.moduleList[-2][2]} bar \n"
+                         f"And for each of those, the durations the brake application in seconds are {schedule.moduleList[-2][3]}s \n")
+        elif schedule_name == self.scheduleList[5]:
+            textBlock = ("A Torque Control test schedule for the testing for brake fade.\n"
+                         "In this schedule, the motor will run up to a given initial speed, \n"
+                         "the brakes will be applied, and while the torque is held constant, "
+                         "will be held until the end set speed is reached. \n"
+                         f"The speed pairs (initial speed, end speed) are {schedule.moduleList[-1][1]} km/h \n"
+                         f"And for each speed bound, the brake pressure will be applied at {schedule.moduleList[-1][2]} bar \n")
         else:
             textBlock = "No Schedule Selected"
 
@@ -466,12 +478,12 @@ class MainPanel(wx.Panel):
     def addTestScheduleHandler(self, handler):
         self.choiceSchedule.Bind( wx.EVT_CHOICE, handler )
 
-    def addParamRecordHandler(self, handler):
-        self.checkJoyX.Bind( wx.EVT_CHECKBOX, handler )
-        self.checkJoyY.Bind( wx.EVT_CHECKBOX, handler )
-        self.checkRotorTemp.Bind( wx.EVT_CHECKBOX, handler )
-        self.checkCalipTemp.Bind( wx.EVT_CHECKBOX, handler )
-        self.checkMotorSpeed.Bind( wx.EVT_CHECKBOX, handler )        
+    # def addParamRecordHandler(self, handler):
+    #     self.checkJoyX.Bind( wx.EVT_CHECKBOX, handler )
+    #     self.checkJoyY.Bind( wx.EVT_CHECKBOX, handler )
+    #     self.checkRotorTemp.Bind( wx.EVT_CHECKBOX, handler )
+    #     self.checkCalipTemp.Bind( wx.EVT_CHECKBOX, handler )
+    #     self.checkMotorSpeed.Bind( wx.EVT_CHECKBOX, handler )        
 
     def addCOMPortHandler(self, handler):
         self.entryCOMPort.Bind( wx.EVT_TEXT, handler )

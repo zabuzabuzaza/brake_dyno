@@ -64,7 +64,9 @@ class TestSchedules():
         self.createSchedules()
     
     def createSchedules(self): 
-        
+        """Populates the scheduleModules with the module functions according to the order 
+        indicated in scheduleOrders. Also calculates the total amounts of test combinations. 
+        """
         for schedule_name in self.scheduleList.keys(): 
             total = 0
             for mod_num in self.scheduleOrders[schedule_name]: 
@@ -77,6 +79,13 @@ class TestSchedules():
 
 
     def runModule(self, module_name, *args):
+        """Runs the given module with the given arguments. 
+
+        Parameters
+        ----------
+        module_name : function
+            refers to a given module function in this class. 
+        """
         return_value = module_name(*args)
 
         return return_value
