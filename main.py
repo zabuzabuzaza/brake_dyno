@@ -2,11 +2,8 @@
 """
 Data aquisition software for the 2020 MECH4552 Brake Dyno team.
 """
-
-
 import sys
 import wx
-
 
 from controller import Controller
 

@@ -5,7 +5,7 @@ Created on Sun Sep  6 17:47:15 2020
 @author: iamde
 """
 import wx
-from frames import MainFrame, SerialDialog
+from frames import MainFrame, SerialDialog, ConstantSpeedOptions
 from panel import MainPanel
 
 from model import Model
@@ -47,6 +47,7 @@ class Controller():
         self.addMainPanelEventHandlers()
 
         self.defaultSettings(None)
+        self.constantspeed_test = ConstantSpeedOptions(self.mainFrame)
 
         self.start_time = 0
         self.speed = 0
@@ -61,8 +62,9 @@ class Controller():
         """Add event handling for changing settings and starting tests. 
         """
         self.mainPanel.addTestScheduleHandler(self.setTestSchedule)
-        #self.mainPanel.addParamRecordHandler(self.setParamRecord)
-        self.mainPanel.addCOMPortHandler(self.setCOMPort)
+        self.mainPanel.addCOMInHandler(self.setCOMPort)
+        # com port out to control system yet to be implemented
+        self.mainPanel.addCOMOutHandler(self.setCOMPort)
         self.mainPanel.addFileNameHandler(self.setFileName)
 
         self.mainPanel.addApplySettingsHandler(self.applySettings)
@@ -74,7 +76,6 @@ class Controller():
     def closeProgram(self, event):
         """Closes the main window. 
         """
-        
         if DEBUG: 
             print("Close Program")
         self.mainFrame.Close()
@@ -90,6 +91,14 @@ class Controller():
         new_Dialog = SerialDialog(self.mainFrame)
         new_Dialog.setDialogMessage(message)
         new_Dialog.ShowModal()
+
+    def showConstantSpeedOptions(self): 
+        
+        self.constantspeed_test.setSettingsHandler(self.setConstantSpeedOptions)
+        self.constantspeed_test.setApplyButtonHandler(self.applyConstantSettings)
+        self.constantspeed_test.ShowModal()
+
+        self.constantspeed_test.testPrint()
 
     def setTestSchedule( self, event ):
         """Add the selected test schedule in dropdown box to selected parameters. 
@@ -110,7 +119,6 @@ class Controller():
         else: 
             self.model.tempParameters['testParams'].remove(param)
 
-
     def setCOMPort( self, event ):
         """Select the COM port where the Arduino is connected. 
         """
@@ -121,6 +129,20 @@ class Controller():
         """Select custom Folder Name to save the recorded data in.
         """
         self.model.tempParameters['fileName'] = event.GetString()
+
+    def setConstantSpeedOptions(self, event): 
+        id_number = event.GetId()
+        input = event.GetString()
+
+        if id_number == 1: 
+            self.constantspeed_test.setSettingsLabels(1, input)
+        elif id_number == 2: 
+            self.constantspeed_test.setSettingsLabels(2, input)
+        elif id_number == 3: 
+            self.constantspeed_test.setSettingsLabels(3, input)
+        else: 
+            # should not happen
+            pass
 
     def applySettings( self, event ):
         """Takes the settings temporarily selected, and permanently applies them to the actual program. 
@@ -140,6 +162,15 @@ class Controller():
         self.mainPanel.drawPlot("Pressure", self.model.createCanvas("Pressure"))
         for param in self.model.testParameters['testParams']: 
             self.mainPanel.drawPlot(param, self.model.createCanvas(param))
+
+        self.showConstantSpeedOptions()
+
+    def applyConstantSettings( self, event ): 
+        if self.constantspeed_test.getOptionValidity(): 
+            speeds, pressures, durations = self.constantspeed_test.getSettings()
+            self.schedule.moduleList[self.schedule.scheduleOrders["Constant Speed"][0]-1] = (self.schedule.const_speed, speeds, pressures, durations)
+
+            self.constantspeed_test.Close()
 
     def defaultSettings( self, event ):
         """Reverts the changed settings back to a default state as stored in defaultParameters in Model. 
@@ -354,7 +385,7 @@ class Controller():
                         if not self.TEST_CONTINUE: 
                             self.finish_serial((time.time() - test_start), total)
                             return
-                        self.speed += 0.2
+                        self.speed += 0.4
 
                         self.mainPanel.updatePlot("Output Speed", self.model.plot1("Output Speed", (time.time() - test_start), self.speed))
                         self.mainPanel.updatePlot("Pressure", self.model.plot1("Pressure", (time.time() - test_start), 0))

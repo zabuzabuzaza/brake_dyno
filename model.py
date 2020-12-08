@@ -29,20 +29,6 @@ class Model():
         # constants
         self.DEFAULT_TEST_DURATION = 200
         self.PLOT_WINDOW = 100
-        # self.scheduleList = {
-        #     "Joystick": 50, 
-        #     "Schedule A": 20, 
-        #     "Schedule B": 40, 
-        #     "Schedule C": 60, 
-        # }
-        self.ALL_PARAMETERS = [
-            "Pressure", 
-            "X-Stick", 
-            "Y-Stick", 
-            "RotorT", 
-            "CaliperT", 
-            "Motor", 
-        ]
 
         self.testDuration = self.DEFAULT_TEST_DURATION
         self.data_titles = [["Seconds", "X_Data", "Y Data", "Thermocouple 1", "Thermocouple 2", "Motor Speed", "Brake Pressure"]]
@@ -52,12 +38,19 @@ class Model():
 
         # default settings 
         self.defaultParameters = {
-            'testSchedule': "Joystick", 
+            'testSchedule': "Constant Speed", 
             'testParams': ["X-Stick", "Y-Stick", "RotorT", "Caliper Temp", "Motor"], 
             'COMPort': "COM3", 
             'COMStatus': "Click Apply to check Status", 
             'fileName': util.getDate(), 
         }
+        # self.defaultParameters = {
+        #     'testSchedule': "Constant Speed", 
+        #     'testParams': ["RotorT", "Caliper Temp", "Motor"], 
+        #     'COMPort': "COM3", 
+        #     'COMStatus': "Click Apply to check Status", 
+        #     'fileName': util.getDate(), 
+        # }
 
         # stores settings 
         self.testParameters = dict(self.defaultParameters)
